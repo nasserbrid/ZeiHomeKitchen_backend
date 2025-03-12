@@ -1,0 +1,6 @@
+@ZeiHomeKichen_backend_HostAddress = http://localhost:5249
+
+GET {{ZeiHomeKichen_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
