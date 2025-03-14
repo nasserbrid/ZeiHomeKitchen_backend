@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ZeiHomeKitchen_backend.props" />
+</Project>
