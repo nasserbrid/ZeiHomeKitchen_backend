@@ -29,7 +29,7 @@ public class IngredientServiceTests
     }
 
     [Fact]
-    public async Task TestGetIngredients()
+    public async Task TestGetAllIngredients()
     {
         //ARRANGE
         var ingredients = new List<Ingredient>();
@@ -41,7 +41,7 @@ public class IngredientServiceTests
         ingredientDtos.Add(new IngredientDto(2, "Tomates"));
 
         //Utilisation du mock pour retourner les ingrédients
-        _mockIngredientRepository.Setup(repo => repo.GetIngredients())
+        _mockIngredientRepository.Setup(repo => repo.GetAllIngredients())
              .ReturnsAsync(ingredients);
 
         //Utilisation de mock pour mapper les ingrédients en DTOs
@@ -50,7 +50,7 @@ public class IngredientServiceTests
 
 
         //ACT
-        var result = await _ingredientService.GetIngredients();
+        var result = await _ingredientService.GetAllIngredients();
 
 
         //ASSERT
@@ -66,7 +66,7 @@ public class IngredientServiceTests
     }
 
     [Fact]
-    public async Task TestGetIngredient()
+    public async Task TestGetIngredientById()
     {
         //ARRANGE
         var ingredient = new Ingredient() { IdIngredient = 1, Nom = "Oignons" };
@@ -74,7 +74,7 @@ public class IngredientServiceTests
         var ingredientDto = new IngredientDto(1, "Oignons");
 
         //Utilisation du mock pour retourner un ingrédient
-        _mockIngredientRepository.Setup(repo => repo.GetIngredient(1))
+        _mockIngredientRepository.Setup(repo => repo.GetIngredientById(1))
              .ReturnsAsync(ingredient);
 
         //Utilisation de mock pour mapper un ingrédient en DTO
@@ -82,7 +82,7 @@ public class IngredientServiceTests
                 .Returns(ingredientDto);
 
         //ACT
-        var result = await _ingredientService.GetIngredient(1);
+        var result = await _ingredientService.GetIngredientById(1);
 
 
         //ASSERT
@@ -103,7 +103,7 @@ public class IngredientServiceTests
         var ingredient = new Ingredient() { IdIngredient = 1, Nom = "Oignons" };
 
         //Utilisation du mock pour retourner l'ID d'un ingrédient 
-        _mockIngredientRepository.Setup(repo => repo.GetIngredient(ingredientId))
+        _mockIngredientRepository.Setup(repo => repo.GetIngredientById(ingredientId))
                .ReturnsAsync(ingredient);
 
         //Utilisation de mock pour supprimer cet ingrédient 

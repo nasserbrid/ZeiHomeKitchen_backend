@@ -9,5 +9,5 @@ public partial class Ingredient
 
     public string? Nom { get; set; }
 
-    public virtual ICollection<Plat> IdPlats { get; set; } = new List<Plat>();
+    public virtual ICollection<Plat> Plats { get; set; } = new List<Plat>();
 }

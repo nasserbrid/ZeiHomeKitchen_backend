@@ -17,11 +17,11 @@ public partial class Reservation
 
     public int IdUtilisateur { get; set; }
 
-    public virtual Statistique IdStatistiqueNavigation { get; set; } = null!;
+    public virtual Statistique StatistiqueNavigation { get; set; } = null!;
 
-    public virtual Utilisateur IdUtilisateurNavigation { get; set; } = null!;
+    public virtual Utilisateur UtilisateurNavigation { get; set; } = null!;
 
     public virtual Paiement? Paiement { get; set; }
 
-    public virtual ICollection<Plat> IdPlats { get; set; } = new List<Plat>();
+    public virtual ICollection<Plat> Plats { get; set; } = new List<Plat>();
 }

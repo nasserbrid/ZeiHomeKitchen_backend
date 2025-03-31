@@ -8,7 +8,7 @@ namespace ZeiHomeKitchen_backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "User")]
 public class AuthController: ControllerBase
 {
     private readonly ILoginService _loginService;
@@ -40,6 +40,7 @@ public class AuthController: ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
+        Console.WriteLine("Requête de création d'utilisateur reçue.");
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -51,7 +52,7 @@ public class AuthController: ControllerBase
             return Conflict("Un utilisateur avec ce nom d'utilisateur ou email existe déjà !");
         }
 
-        return Ok();
+        return Ok(new { message = "Inscription réussie !" });
     }
 
 }

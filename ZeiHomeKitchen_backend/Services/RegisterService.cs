@@ -16,14 +16,17 @@ public class RegisterService : IRegisterService
 
     public async Task<bool> Register(RegisterDto registerDto)
     {
-        if (await _registerRepository.UserExists(registerDto.username, registerDto.Email))
+        bool userExists = await _registerRepository.UserExists(registerDto.username, registerDto.Email);
+        Console.WriteLine($"Utilisateur existe déjà : {userExists}");
+
+        if (userExists)
         {
             return false;
         }
 
         var user = await _registerRepository.CreateUser(registerDto);
 
-        
+
         return user != null;
     }
 }

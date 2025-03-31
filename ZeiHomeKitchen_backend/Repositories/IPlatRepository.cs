@@ -5,10 +5,14 @@ namespace ZeiHomeKitchen_backend.Repositories
 {
     public interface IPlatRepository
     {
-        Task<IEnumerable<Plat>> GetPlats();
-        Task<Plat> GetPlat(int PlatId);
-        Task<Plat> CreatePlat(Plat plat);
-        Task<Plat> UpdatePlat(Plat plat);
-        Task<bool> DeletePlat(int PlatId);
+        Task<IEnumerable<Plat>> GetAllPlats(); 
+        Task<Plat> GetPlatById(int platId); 
+        Task<Plat> CreateNewPlat(Plat plat); 
+        Task<Plat> UpdateExistingPlat(Plat plat); 
+        Task<bool> DeletePlatById(int platId); 
+        Task<Plat> GetPlatDetailsWithIngredients(int platId); 
+        Task<bool> LinkIngredientToPlat(int platId, int ingredientId); 
+        Task<bool> RemoveIngredientFromPlat(int platId, int ingredientId); 
+        Task<IEnumerable<Ingredient>> GetIngredientsByPlat(int platId); 
     }
 }

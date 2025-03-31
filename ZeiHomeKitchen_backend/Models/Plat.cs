@@ -15,7 +15,7 @@ public partial class Plat
 
     public decimal? Prix { get; set; }
 
-    public virtual ICollection<Ingredient> IdIngredients { get; set; } = new List<Ingredient>();
+    public virtual ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 
-    public virtual ICollection<Reservation> IdReservations { get; set; } = new List<Reservation>();
+    public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

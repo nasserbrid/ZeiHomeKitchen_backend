@@ -12,7 +12,7 @@ using ZeiHomeKitchen_backend.Models;
 namespace ZeiHomeKitchen_backend.Migrations
 {
     [DbContext(typeof(ZeiHomeKitchenContext))]
-    [Migration("20250313134138_InitialMigration")]
+    [Migration("20250328145153_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -419,6 +419,10 @@ namespace ZeiHomeKitchen_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -525,32 +529,32 @@ namespace ZeiHomeKitchen_backend.Migrations
 
             modelBuilder.Entity("ZeiHomeKitchen_backend.Models.Paiement", b =>
                 {
-                    b.HasOne("ZeiHomeKitchen_backend.Models.Reservation", "IdReservationNavigation")
+                    b.HasOne("ZeiHomeKitchen_backend.Models.Reservation", "ReservationNavigation")
                         .WithOne("Paiement")
                         .HasForeignKey("ZeiHomeKitchen_backend.Models.Paiement", "IdReservation")
                         .IsRequired()
                         .HasConstraintName("FK__Paiement__id_res__47DBAE45");
 
-                    b.Navigation("IdReservationNavigation");
+                    b.Navigation("ReservationNavigation");
                 });
 
             modelBuilder.Entity("ZeiHomeKitchen_backend.Models.Reservation", b =>
                 {
-                    b.HasOne("ZeiHomeKitchen_backend.Models.Statistique", "IdStatistiqueNavigation")
+                    b.HasOne("ZeiHomeKitchen_backend.Models.Statistique", "StatistiqueNavigation")
                         .WithMany("Reservations")
                         .HasForeignKey("IdStatistique")
                         .IsRequired()
                         .HasConstraintName("FK__Reservati__id_st__412EB0B6");
 
-                    b.HasOne("ZeiHomeKitchen_backend.Models.Utilisateur", "IdUtilisateurNavigation")
+                    b.HasOne("ZeiHomeKitchen_backend.Models.Utilisateur", "UtilisateurNavigation")
                         .WithMany("Reservations")
                         .HasForeignKey("IdUtilisateur")
                         .IsRequired()
                         .HasConstraintName("FK__Reservati__id_ut__4222D4EF");
 
-                    b.Navigation("IdStatistiqueNavigation");
+                    b.Navigation("StatistiqueNavigation");
 
-                    b.Navigation("IdUtilisateurNavigation");
+                    b.Navigation("UtilisateurNavigation");
                 });
 
             modelBuilder.Entity("ZeiHomeKitchen_backend.Models.Reservation", b =>

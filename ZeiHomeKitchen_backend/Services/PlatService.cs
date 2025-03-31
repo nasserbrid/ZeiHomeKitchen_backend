@@ -2,6 +2,7 @@
 using ZeiHomeKitchen_backend.Dtos;
 using ZeiHomeKitchen_backend.Models;
 using ZeiHomeKitchen_backend.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace ZeiHomeKitchen_backend.Services
 {
@@ -18,67 +19,101 @@ namespace ZeiHomeKitchen_backend.Services
             _mapper = mapper;
             _logger = logger;
             _imagesService = imagesService;
-
-        }
-        public async Task<PlatDto> CreatePlat(PlatDto platDto)
-        {
-            if (platDto == null)
-            {
-                throw new ArgumentNullException(nameof(platDto));
-            }
-            _logger.LogInformation("Mapping de PlatDto vers Plat.");
-            var platEntity = _mapper.Map<Plat>(platDto);
-
-            // Optimiser l'image si elle est fournie
-            if (platDto.Image != null)
-            {
-                var optimizedImageBytes = _imagesService.OptimizeImage(platDto.Image, 500, 500, 75);
-
-                // Assigner l'image optimisée
-                platEntity.Image = optimizedImageBytes; 
-            }
-
-            _logger.LogInformation("Enregistrement de l'entité en base de données.");
-            var createPlat = await _platRepository.CreatePlat(platEntity);
-
-            _logger.LogInformation("Mapping de l'entité créé vers PlatDto.");
-            return _mapper.Map<PlatDto>(createPlat);
-
         }
 
-        public async Task<bool> DeletePlat(int PlatId)
+        /// <summary>
+        /// Récupère la liste de tous les plats.
+        /// </summary>
+        public async Task<IEnumerable<PlatDto>> GetAllPlats()
         {
-            return await _platRepository.DeletePlat(PlatId);
-        }
-
-        public async Task<PlatDto> GetPlat(int PlatId)
-        {
-            var platById = await _platRepository.GetPlat(PlatId);
-            return _mapper.Map<PlatDto>(platById);
-        }
-
-        public async Task<IEnumerable<PlatDto>> GetPlats()
-        {
-            var plats = await _platRepository.GetPlats();
+            var plats = await _platRepository.GetAllPlats();
             return _mapper.Map<IEnumerable<PlatDto>>(plats);
         }
 
-        public async Task<PlatDto> UpdatePlat(PlatDto platDto)
+        /// <summary>
+        /// Récupère un plat par son ID.
+        /// </summary>
+        public async Task<PlatDto> GetPlatById(int platId)
+        {
+            var plat = await _platRepository.GetPlatById(platId);
+            return _mapper.Map<PlatDto>(plat);
+        }
+
+        /// <summary>
+        /// Crée un nouveau plat.
+        /// </summary>
+        public async Task<PlatDto> CreateNewPlat(PlatDto platDto)
+        {
+            if (platDto == null) throw new ArgumentNullException(nameof(platDto));
+
+            _logger.LogInformation("Création d'un nouveau plat.");
+            var platEntity = _mapper.Map<Plat>(platDto);
+
+            if (platDto.Image != null)
+            {
+                platEntity.Image = _imagesService.OptimizeImage(platDto.Image, 500, 500, 90);
+            }
+
+            var createdPlat = await _platRepository.CreateNewPlat(platEntity);
+            return _mapper.Map<PlatDto>(createdPlat);
+        }
+
+        /// <summary>
+        /// Met à jour un plat existant.
+        /// </summary>
+        public async Task<PlatDto> UpdateExistingPlat(PlatDto platDto)
         {
             var platEntity = _mapper.Map<Plat>(platDto);
 
-            // Optimiser l'image si elle est fournie
             if (platDto.Image != null)
             {
-                var optimizedImageBytes = _imagesService.OptimizeImage(platDto.Image, 500, 500, 75);
-
-                // Assigner l'image optimisée
-                platEntity.Image = optimizedImageBytes;
+                platEntity.Image = _imagesService.OptimizeImage(platDto.Image, 500, 500, 90);
             }
 
-            var updatePlat = await _platRepository.UpdatePlat(platEntity);
+            var updatedPlat = await _platRepository.UpdateExistingPlat(platEntity);
+            return _mapper.Map<PlatDto>(updatedPlat);
+        }
 
-            return _mapper.Map<PlatDto>(updatePlat);
+        /// <summary>
+        /// Supprime un plat par son ID.
+        /// </summary>
+        public async Task<bool> DeletePlatById(int platId)
+        {
+            return await _platRepository.DeletePlatById(platId);
+        }
+
+        /// <summary>
+        /// Récupère un plat avec ses ingrédients associés.
+        /// </summary>
+        public async Task<PlatDto> GetPlatDetailsWithIngredients(int platId)
+        {
+            var plat = await _platRepository.GetPlatDetailsWithIngredients(platId);
+            return _mapper.Map<PlatDto>(plat);
+        }
+
+        /// <summary>
+        /// Associe un ingrédient à un plat.
+        /// </summary>
+        public async Task<bool> LinkIngredientToPlat(int platId, int ingredientId)
+        {
+            return await _platRepository.LinkIngredientToPlat(platId, ingredientId);
+        }
+
+        /// <summary>
+        /// Supprime un ingrédient d'un plat.
+        /// </summary>
+        public async Task<bool> RemoveIngredientFromPlat(int platId, int ingredientId)
+        {
+            return await _platRepository.RemoveIngredientFromPlat(platId, ingredientId);
+        }
+
+        /// <summary>
+        /// Récupère les ingrédients associés à un plat.
+        /// </summary>
+        public async Task<IEnumerable<IngredientDto>> GetIngredientsByPlat(int platId)
+        {
+            var ingredients = await _platRepository.GetIngredientsByPlat(platId);
+            return _mapper.Map<IEnumerable<IngredientDto>>(ingredients);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
         }
 
         [Fact]
-        public async Task TestGetPlats()
+        public async Task TestGetAllPlats()
         {
             // ARRANGE
             var plats = new List<Plat>
@@ -44,11 +44,11 @@ namespace ZeiHomeKitchen_backend.Tests.Services
                 new PlatDto(2, "Riz à l'agneau", "Description2", new byte[] { 4, 5, 6 }, 30)
            };
 
-            _mockPlatRepository.Setup(repo => repo.GetPlats()).ReturnsAsync(plats);
+            _mockPlatRepository.Setup(repo => repo.GetAllPlats()).ReturnsAsync(plats);
             _mockMapper.Setup(m => m.Map<IEnumerable<PlatDto>>(It.IsAny<IEnumerable<Plat>>())).Returns(platDtos);
 
             // ACT
-            var result = await _platService.GetPlats();
+            var result = await _platService.GetAllPlats();
 
             // ASSERT
             var okResult = Assert.IsType<List<PlatDto>>(result);
@@ -58,7 +58,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
 
 
         [Fact]
-        public async Task TestGetPlat()
+        public async Task TestGetPlatById()
         {
             //ARRANGE
             
@@ -67,7 +67,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             var platDto = new PlatDto(1, "Omelette Djiboutienne", "Description1", new byte[] { 1, 2, 3 }, 20);
 
             //Utilisation du mock pour retourner un plat
-            _mockPlatRepository.Setup(repo => repo.GetPlat(1))
+            _mockPlatRepository.Setup(repo => repo.GetPlatById(1))
                  .ReturnsAsync(plat);
 
             //Utilisation de mock pour mapper un plat en DTO
@@ -75,7 +75,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
                     .Returns(platDto);
 
             //ACT
-            var result = await _platService.GetPlat(1);
+            var result = await _platService.GetPlatById(1);
 
 
             //ASSERT
@@ -88,7 +88,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
         }
 
         [Fact]
-        public async Task TestDeletePlat()
+        public async Task TestDeletePlatById()
         {
             //ARRANGE
             var platId = 1;
@@ -96,15 +96,15 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             var plat = new Plat() { IdPlat = 1, Nom = "Omelette Djiboutienne", Description = "Description1", Image = new byte[] { 1, 2, 3 }, Prix = 20 };
 
             //Utilisation du mock pour retourner l'ID d'un plat
-            _mockPlatRepository.Setup(repo => repo.GetPlat(platId))
+            _mockPlatRepository.Setup(repo => repo.GetPlatById(platId))
                    .ReturnsAsync(plat);
 
             //Utilisation de mock pour supprimer ce plat
-            _mockPlatRepository.Setup(repo => repo.DeletePlat(platId))
+            _mockPlatRepository.Setup(repo => repo.DeletePlatById(platId))
                    .ReturnsAsync(true);
 
             //ACT
-            var result = await _platService.DeletePlat(platId);
+            var result = await _platService.DeletePlatById(platId);
 
 
             //ASSERT
@@ -116,11 +116,11 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             Assert.True(result);
 
             //Je vérifie que la méthode DeletePlat() a été appelée.
-            _mockPlatRepository.Verify(repo => repo.DeletePlat(1), Times.Once);
+            _mockPlatRepository.Verify(repo => repo.DeletePlatById(1), Times.Once);
         }
 
         [Fact]
-        public async Task TestCreatePlat()
+        public async Task TestCreateNewPlat()
         {
             // ARRANGE
             // Je crée une entité Plat pour simuler un plat dans la base de données.
@@ -133,7 +133,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             _mockMapper.Setup(m => m.Map<Plat>(platDto)).Returns(platEntity);
 
             // Utilisation du mock pour retourner l'entité lors de la création.
-            _mockPlatRepository.Setup(repo => repo.CreatePlat(It.IsAny<Plat>()))
+            _mockPlatRepository.Setup(repo => repo.CreateNewPlat(It.IsAny<Plat>()))
                 .ReturnsAsync(platEntity);
 
             // Utilisation du mock pour mapper l'entité créé en DTO.
@@ -142,7 +142,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
 
             // ACT
             // J'appelle la méthode CreatePlat pour tester son bon fonctionnement.
-            var result = await _platService.CreatePlat(platDto);
+            var result = await _platService.CreateNewPlat(platDto);
 
             // ASSERT
             // Je vérifie que le résultat n'est pas null.
@@ -157,7 +157,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
 
             // Je vérifie que les mocks ont bien été appelés une seule fois.
             _mockMapper.Verify(m => m.Map<Plat>(platDto), Times.Once);
-            _mockPlatRepository.Verify(repo => repo.CreatePlat(It.IsAny<Plat>()), Times.Once);
+            _mockPlatRepository.Verify(repo => repo.CreateNewPlat(It.IsAny<Plat>()), Times.Once);
             _mockMapper.Verify(m => m.Map<PlatDto>(platEntity), Times.Once);
 
             // Vérification des appels au logger avec n'importe quel message (sans méthode d'extension)
@@ -172,14 +172,14 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             PlatDto platDto = null;
 
             // ACT & ASSERT
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _platService.CreatePlat(platDto));
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _platService.CreateNewPlat(platDto));
 
             // Je Vérifie que le message de l'exception contient le nom du paramètre
             Assert.Equal("platDto", exception.ParamName);
         }
 
         [Fact]
-        public async Task TestUpdatePlat()
+        public async Task TestUpdateExistingPlat()
         {
             // ARRANGE
             var platEntity = new Plat() { IdPlat = 2, Nom = "Riz à l'agneau", Description = "Description2", Image = new byte[] { 4, 5, 6 }, Prix = 30 };
@@ -189,7 +189,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             _mockMapper.Setup(m => m.Map<Plat>(platDto)).Returns(platEntity);
 
             // Utilisation du mock pour retourner l'entité lors de la création
-            _mockPlatRepository.Setup(repo => repo.UpdatePlat(It.IsAny<Plat>()))
+            _mockPlatRepository.Setup(repo => repo.UpdateExistingPlat(It.IsAny<Plat>()))
                 .ReturnsAsync(platEntity);
 
             // Utilisation de mock pour mapper l'entité en DTO
@@ -197,7 +197,7 @@ namespace ZeiHomeKitchen_backend.Tests.Services
                 .Returns(platDto);
 
             // ACT
-            var result = await _platService.UpdatePlat(platDto);
+            var result = await _platService.UpdateExistingPlat(platDto);
 
             // ASSERT
             // Je vérifie que le résultat est de type <IngredientDto>
