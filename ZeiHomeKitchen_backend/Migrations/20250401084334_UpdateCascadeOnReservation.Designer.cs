@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZeiHomeKitchen_backend.Models;
 
@@ -11,9 +12,11 @@ using ZeiHomeKitchen_backend.Models;
 namespace ZeiHomeKitchen_backend.Migrations
 {
     [DbContext(typeof(ZeiHomeKitchenContext))]
-    partial class ZeiHomeKitchenContextModelSnapshot : ModelSnapshot
+    [Migration("20250401084334_UpdateCascadeOnReservation")]
+    partial class UpdateCascadeOnReservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

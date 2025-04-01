@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("SqlDbConnection");
 
 //J'ajoute mon dbcontext dans program.cs
-builder.Services.AddDbContext<ZeiHomeKitchenContext>(options => 
+builder.Services.AddDbContext<ZeiHomeKitchenContext>(options =>
      options.UseSqlServer(builder.Configuration.GetConnectionString("SqlDbConnection")));
 
 
@@ -39,6 +39,9 @@ builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 //J'ajoute RegisterRepository dans program.cs
 builder.Services.AddScoped<IRegisterRepository, RegisterRepository>();
 
+//J'ajoute ReservationRepository dans program.cs
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+
 
 //J'ajoute IngredientService dans program.cs
 builder.Services.AddScoped<IIngredientService, IngredientService>();
@@ -55,6 +58,9 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 //J'ajoute RegisterService dans program.cs
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 
+//J'ajoute ReservationService dans program.cs
+builder.Services.AddScoped<IReservationService, ReservationService>();
+
 builder.Services.AddScoped<TokenService>(provider =>
 {
     var secretKey = builder.Configuration["Jwt:SecretKey"]; // Assurez-vous que cela est configuré dans votre appsettings.json
@@ -69,6 +75,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
 
+//Me permets d'avoir une taille plus conséquente pour les images en base64.
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
     options.Limits.MaxResponseBufferSize = 10 * 1024 * 1024; // Par exemple, 10 Mo
@@ -139,7 +146,8 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Utilisateur>>();
 
-    string[] roleNames = { "Admin", "User" }; // Ajouter les rôles que vous souhaitez
+    // Ici ajout des rôles Admin et User venant d'IdentityUser
+    string[] roleNames = { "Admin", "User" };
     IdentityResult roleResult;
 
     foreach (var roleName in roleNames)
