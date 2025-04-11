@@ -15,7 +15,7 @@ public class CreateReservationService : ICreateReservationService
         ILogger<CreateReservationService> logger)
     {
         _repository = repository;
-        _paiementRepository = paiementRepository; /
+        _paiementRepository = paiementRepository; 
         _logger = logger;
     }
 
