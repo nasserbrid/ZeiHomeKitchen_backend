@@ -482,3 +482,7 @@ C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\obj
 C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\obj\Debug\net8.0\ZeiHomeKitchen_backend.pdb
 C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\obj\Debug\net8.0\ZeiHomeKitchen_backend.genruntimeconfig.cache
 C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\obj\Debug\net8.0\ref\ZeiHomeKitchen_backend.dll
+C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\nasse\OneDrive\Bureau\Surplus\ZeiHomeKitchen\ZeiHomeKitchen_backend\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll

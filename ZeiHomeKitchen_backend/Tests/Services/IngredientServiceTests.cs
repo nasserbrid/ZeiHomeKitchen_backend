@@ -14,7 +14,7 @@ public class IngredientServiceTests
 {
     private readonly Mock<IIngredientRepository> _mockIngredientRepository;
 
-    private readonly Mock<IMapper> _mockMapper;
+   // private readonly Mock<IMapper> _mockMapper;
 
     private readonly Mock<ILogger<IngredientService>> _mockLogger;
 
@@ -24,8 +24,9 @@ public class IngredientServiceTests
     {
         _mockLogger = new Mock<ILogger<IngredientService>>();
         _mockIngredientRepository = new Mock<IIngredientRepository>();
-        _mockMapper = new Mock<IMapper>();
-        _ingredientService = new IngredientService(_mockIngredientRepository.Object, _mockMapper.Object, _mockLogger.Object);
+        // _mockMapper = new Mock<IMapper>();
+        //_ingredientService = new IngredientService(_mockIngredientRepository.Object, _mockMapper.Object,_mockLogger.Object);
+        _ingredientService = new IngredientService(_mockIngredientRepository.Object, _mockLogger.Object);
     }
 
     [Fact]
@@ -40,13 +41,14 @@ public class IngredientServiceTests
         ingredientDtos.Add(new IngredientDto(1, "Oignons"));
         ingredientDtos.Add(new IngredientDto(2, "Tomates"));
 
+
         //Utilisation du mock pour retourner les ingrédients
         _mockIngredientRepository.Setup(repo => repo.GetAllIngredients())
              .ReturnsAsync(ingredients);
 
         //Utilisation de mock pour mapper les ingrédients en DTOs
-        _mockMapper.Setup(m => m.Map<IEnumerable<IngredientDto>>(It.IsAny<IEnumerable<Ingredient>>()))
-                .Returns(ingredientDtos);
+        //_mockMapper.Setup(m => m.Map<IEnumerable<IngredientDto>>(It.IsAny<IEnumerable<Ingredient>>()))
+               // .Returns(ingredientDtos);
 
 
         //ACT
@@ -73,13 +75,13 @@ public class IngredientServiceTests
 
         var ingredientDto = new IngredientDto(1, "Oignons");
 
-        //Utilisation du mock pour retourner un ingrédient
+        
         _mockIngredientRepository.Setup(repo => repo.GetIngredientById(1))
              .ReturnsAsync(ingredient);
 
         //Utilisation de mock pour mapper un ingrédient en DTO
-        _mockMapper.Setup(m => m.Map<IngredientDto>(It.IsAny<Ingredient>()))
-                .Returns(ingredientDto);
+       // _mockMapper.Setup(m => m.Map<IngredientDto>(It.IsAny<Ingredient>()))
+               // .Returns(ingredientDto);
 
         //ACT
         var result = await _ingredientService.GetIngredientById(1);
@@ -135,18 +137,18 @@ public class IngredientServiceTests
         var ingredientEntity = new Ingredient() { IdIngredient = 3, Nom = "Ails" };
 
         // Je crée un DTO représentant l'ingrédient que l'on souhaite créer.
-        var ingredientDto = new IngredientDto(3, "Ails");
+        var ingredientDto = new IngredientDto(3, "Ails" );
 
         // Utilisation du mock pour mapper un DTO en entité.
-        _mockMapper.Setup(m => m.Map<Ingredient>(ingredientDto)).Returns(ingredientEntity);
+       // _mockMapper.Setup(m => m.Map<Ingredient>(ingredientDto)).Returns(ingredientEntity);
 
         // Utilisation du mock pour retourner l'entité lors de la création.
         _mockIngredientRepository.Setup(repo => repo.CreateIngredient(It.IsAny<Ingredient>()))
             .ReturnsAsync(ingredientEntity);
 
         // Utilisation du mock pour mapper l'entité créé en DTO.
-        _mockMapper.Setup(m => m.Map<IngredientDto>(ingredientEntity))
-            .Returns(ingredientDto);
+        //_mockMapper.Setup(m => m.Map<IngredientDto>(ingredientEntity))
+           // .Returns(ingredientDto);
 
         // ACT
         // J'appelle la méthode CreateIngredient pour tester son bon fonctionnement.
@@ -164,9 +166,9 @@ public class IngredientServiceTests
         Assert.Equal(ingredientDto.Nom, okResult.Nom);
 
         // Je vérifie que les mocks ont bien été appelés une seule fois.
-        _mockMapper.Verify(m => m.Map<Ingredient>(ingredientDto), Times.Once);
-        _mockIngredientRepository.Verify(repo => repo.CreateIngredient(It.IsAny<Ingredient>()), Times.Once);
-        _mockMapper.Verify(m => m.Map<IngredientDto>(ingredientEntity), Times.Once);
+       // _mockMapper.Verify(m => m.Map<Ingredient>(ingredientDto), Times.Once);
+       // _mockIngredientRepository.Verify(repo => repo.CreateIngredient(It.IsAny<Ingredient>()), Times.Once);
+       // _mockMapper.Verify(m => m.Map<IngredientDto>(ingredientEntity), Times.Once);
 
         // Vérification des appels au logger avec n'importe quel message (sans méthode d'extension)
         _mockLogger.Verify(logger => logger.Log(LogLevel.Information, It.IsAny<EventId>(), It.Is<It.IsAnyType>((state, type) => true), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Exactly(3));
@@ -196,18 +198,18 @@ public class IngredientServiceTests
     {
         // ARRANGE
         var ingredientEntity = new Ingredient() { IdIngredient = 2, Nom = "Poivrons" };
-        var ingredientDto = new IngredientDto(2, "Poivrons");
+        var ingredientDto = new IngredientDto(2,"Poivrons");
 
         // Utilisation du mock pour mapper un DTO en entité
-        _mockMapper.Setup(m => m.Map<Ingredient>(ingredientDto)).Returns(ingredientEntity);
+       // _mockMapper.Setup(m => m.Map<Ingredient>(ingredientDto)).Returns(ingredientEntity);
 
         // Utilisation du mock pour retourner l'entité lors de la création
         _mockIngredientRepository.Setup(repo => repo.UpdateIngredient(It.IsAny<Ingredient>()))
             .ReturnsAsync(ingredientEntity);
 
         // Utilisation de mock pour mapper l'entité en DTO
-        _mockMapper.Setup(m => m.Map<IngredientDto>(ingredientEntity))
-            .Returns(ingredientDto);
+       // _mockMapper.Setup(m => m.Map<IngredientDto>(ingredientEntity))
+           // .Returns(ingredientDto);
 
         // ACT
         var result = await _ingredientService.UpdateIngredient(ingredientDto);

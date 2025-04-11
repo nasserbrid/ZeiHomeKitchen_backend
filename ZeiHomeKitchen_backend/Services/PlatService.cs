@@ -3,20 +3,21 @@ using ZeiHomeKitchen_backend.Dtos;
 using ZeiHomeKitchen_backend.Models;
 using ZeiHomeKitchen_backend.Repositories;
 using Microsoft.Extensions.Logging;
+using ZeiHomeKitchen_backend.MappingConfiguration;
 
 namespace ZeiHomeKitchen_backend.Services
 {
     public class PlatService : IPlatService
     {
         private readonly IPlatRepository _platRepository;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
         private readonly ILogger<PlatService> _logger;
         private readonly IImagesService _imagesService;
 
-        public PlatService(IPlatRepository platRepository, IMapper mapper, ILogger<PlatService> logger, IImagesService imagesService)
+        public PlatService(IPlatRepository platRepository, /*IMapper mapper,*/ ILogger<PlatService> logger, IImagesService imagesService)
         {
             _platRepository = platRepository;
-            _mapper = mapper;
+            //_mapper = mapper;
             _logger = logger;
             _imagesService = imagesService;
         }
@@ -27,7 +28,8 @@ namespace ZeiHomeKitchen_backend.Services
         public async Task<IEnumerable<PlatDto>> GetAllPlats()
         {
             var plats = await _platRepository.GetAllPlats();
-            return _mapper.Map<IEnumerable<PlatDto>>(plats);
+           // return _mapper.Map<IEnumerable<PlatDto>>(plats);
+            return plats.Select(p => p.ToDto());
         }
 
         /// <summary>
@@ -36,7 +38,8 @@ namespace ZeiHomeKitchen_backend.Services
         public async Task<PlatDto> GetPlatById(int platId)
         {
             var plat = await _platRepository.GetPlatById(platId);
-            return _mapper.Map<PlatDto>(plat);
+            // return _mapper.Map<PlatDto>(plat);
+            return plat?.ToDto();
         }
 
         /// <summary>
@@ -47,7 +50,8 @@ namespace ZeiHomeKitchen_backend.Services
             if (platDto == null) throw new ArgumentNullException(nameof(platDto));
 
             _logger.LogInformation("Création d'un nouveau plat.");
-            var platEntity = _mapper.Map<Plat>(platDto);
+            //var platEntity = _mapper.Map<Plat>(platDto);
+            var platEntity = platDto.ToModel();
 
             if (platDto.Image != null)
             {
@@ -55,7 +59,8 @@ namespace ZeiHomeKitchen_backend.Services
             }
 
             var createdPlat = await _platRepository.CreateNewPlat(platEntity);
-            return _mapper.Map<PlatDto>(createdPlat);
+            //return _mapper.Map<PlatDto>(createdPlat);
+            return createdPlat.ToDto();
         }
 
         /// <summary>
@@ -63,7 +68,8 @@ namespace ZeiHomeKitchen_backend.Services
         /// </summary>
         public async Task<PlatDto> UpdateExistingPlat(PlatDto platDto)
         {
-            var platEntity = _mapper.Map<Plat>(platDto);
+            //var platEntity = _mapper.Map<Plat>(platDto);
+            var platEntity = platDto.ToModel();
 
             if (platDto.Image != null)
             {
@@ -71,7 +77,8 @@ namespace ZeiHomeKitchen_backend.Services
             }
 
             var updatedPlat = await _platRepository.UpdateExistingPlat(platEntity);
-            return _mapper.Map<PlatDto>(updatedPlat);
+            //return _mapper.Map<PlatDto>(updatedPlat);
+            return updatedPlat.ToDto();
         }
 
         /// <summary>
@@ -88,7 +95,8 @@ namespace ZeiHomeKitchen_backend.Services
         public async Task<PlatDto> GetPlatDetailsWithIngredients(int platId)
         {
             var plat = await _platRepository.GetPlatDetailsWithIngredients(platId);
-            return _mapper.Map<PlatDto>(plat);
+            //return _mapper.Map<PlatDto>(plat);
+            return plat.ToDto();
         }
 
         /// <summary>
@@ -113,7 +121,8 @@ namespace ZeiHomeKitchen_backend.Services
         public async Task<IEnumerable<IngredientDto>> GetIngredientsByPlat(int platId)
         {
             var ingredients = await _platRepository.GetIngredientsByPlat(platId);
-            return _mapper.Map<IEnumerable<IngredientDto>>(ingredients);
+            //return _mapper.Map<IEnumerable<IngredientDto>>(ingredients);
+            return ingredients.Select(i => i.ToDto());
         }
     }
 }

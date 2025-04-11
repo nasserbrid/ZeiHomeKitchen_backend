@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZeiHomeKitchen_backend.Dtos;
 using ZeiHomeKitchen_backend.Models;
+using ZeiHomeKitchen_backend.Services;
 
 namespace ZeiHomeKitchen_backend.Repositories
 {
@@ -8,9 +9,11 @@ namespace ZeiHomeKitchen_backend.Repositories
     {
         // Injection de la classe ZeiHomeKitchenContext
         private readonly ZeiHomeKitchenContext _zeiHomeKitchenContext;
-        public ReservationRepository(ZeiHomeKitchenContext zeiHomeKitchenContext)
+        private readonly ILogger<ReservationRepository> _logger;
+        public ReservationRepository(ZeiHomeKitchenContext zeiHomeKitchenContext, ILogger<ReservationRepository> logger)
         {
             _zeiHomeKitchenContext = zeiHomeKitchenContext;
+            _logger = logger;
         }
 
         /// <summary>
@@ -70,9 +73,9 @@ namespace ZeiHomeKitchen_backend.Repositories
         /// <returns>La réservation créée.</returns>
         public async Task<Reservation> CreateReservation(Reservation reservation)
         {
-            var result = await _zeiHomeKitchenContext.Reservations.AddAsync(reservation);
+            var newReservation = await _zeiHomeKitchenContext.Reservations.AddAsync(reservation);
             await _zeiHomeKitchenContext.SaveChangesAsync();
-            return result.Entity;
+            return newReservation.Entity;
         }
 
         /// <summary>
@@ -101,7 +104,9 @@ namespace ZeiHomeKitchen_backend.Repositories
         /// <returns>Une liste de toutes les réservations.</returns>
         public async Task<IEnumerable<Reservation>> GetAllReservations()
         {
-            return await _zeiHomeKitchenContext.Reservations.ToListAsync();
+            var reservations = await _zeiHomeKitchenContext.Reservations.ToListAsync();
+            _logger.LogInformation($"Nombre de réservations récupérées : {reservations.Count()}");
+            return reservations;
         }
 
         /// <summary>
@@ -112,6 +117,7 @@ namespace ZeiHomeKitchen_backend.Repositories
         public async Task<Reservation> GetReservationById(int reservationId)
         {
             return await _zeiHomeKitchenContext.Reservations
+                .Include(r => r.Plats)
                 .FirstOrDefaultAsync(r => r.IdReservation == reservationId);
         }
 
@@ -122,10 +128,27 @@ namespace ZeiHomeKitchen_backend.Repositories
         /// <returns>La réservation avec ses plats.</returns>
         public async Task<Reservation> GetReservationForPlats(int reservationId)
         {
-            return await _zeiHomeKitchenContext.Reservations
-                .Include(r => r.Plats)
-                .FirstOrDefaultAsync(r => r.IdReservation == reservationId);
+            var reservation = await _zeiHomeKitchenContext.Reservations
+        .Include(r => r.Plats)
+        .ThenInclude(p => p.Reservations) 
+        .FirstOrDefaultAsync(r => r.IdReservation == reservationId);
+
+            if (reservation == null)
+            {
+                Console.WriteLine("Aucune réservation trouvée.");
+                return null;
+            }
+
+            Console.WriteLine($"Réservation ID: {reservation.IdReservation}, Nombre de plats: {reservation.Plats.Count}");
+
+            foreach (var plat in reservation.Plats)
+            {
+                Console.WriteLine($"Plat ID: {plat.IdPlat}, Nom: {plat.Nom}, Nombre de réservations associées : {plat.Reservations?.Count}");
+            }
+
+            return reservation;
         }
+
 
         /// <summary>
         /// Récupère les réservations effectuées à une date donnée.
@@ -197,6 +220,41 @@ namespace ZeiHomeKitchen_backend.Repositories
 
             return reservation;
         }
+
+        public async Task<Paiement> CreatePaiementForReservation(int reservationId, decimal montant, PaiementMoyenDto moyen)
+        {
+            
+            if (montant <= 0)
+            {
+                throw new ArgumentException("Le montant du paiement doit être supérieur à zéro.");
+            }
+
+            // Récupération de la réservation associée
+            var reservation = await _zeiHomeKitchenContext.Reservations.FindAsync(reservationId);
+
+            if (reservation == null)
+            {
+                throw new ArgumentException("Réservation non trouvée.");
+            }
+
+            //Ici je crée une nouvelle instance de Paiement
+            var paiement = new Paiement
+            {
+                Montant = montant,
+                Statut = PaiementStatusDto.EnAttente.ToString(), 
+                Moyen = moyen.ToString(), 
+                IdReservation = reservationId 
+            };
+
+            
+            await _zeiHomeKitchenContext.Paiements.AddAsync(paiement);
+            await _zeiHomeKitchenContext.SaveChangesAsync(); 
+
+            return paiement; 
+        }
+
+
+
 
     }
 }

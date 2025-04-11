@@ -148,48 +148,48 @@ namespace ZeiHomeKitchen_backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Récupère les plats associés à un ingrédient par son ID.
-        /// </summary>
-        /// <param name="ingredientId">L'ID de l'ingrédient pour lequel récupérer les plats.</param>
-        /// <returns>Une collection de DTOs de plats associés.</returns>
-        [HttpGet("{ingredientId}/plats")]
-        public async Task<ActionResult<IEnumerable<PlatDto>>> GetPlatsByIngredientId(int ingredientId)
-        {
-            try
-            {
-                var plats = await _ingredientService.GetPlatsByIngredientId(ingredientId);
-                return Ok(plats);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erreur lors de la récupération des plats pour l'ingrédient {ingredientId}");
-                return StatusCode(500, "Une erreur est survenue lors de la récupération des plats de l'ingrédient");
-            }
-        }
+        ///// <summary>
+        ///// Récupère les plats associés à un ingrédient par son ID.
+        ///// </summary>
+        ///// <param name="ingredientId">L'ID de l'ingrédient pour lequel récupérer les plats.</param>
+        ///// <returns>Une collection de DTOs de plats associés.</returns>
+        //[HttpGet("{ingredientId}/plats")]
+        //public async Task<ActionResult<IEnumerable<PlatDto>>> GetPlatsByIngredientId(int ingredientId)
+        //{
+        //    try
+        //    {
+        //        var plats = await _ingredientService.GetPlatsByIngredientId(ingredientId);
+        //        return Ok(plats);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Erreur lors de la récupération des plats pour l'ingrédient {ingredientId}");
+        //        return StatusCode(500, "Une erreur est survenue lors de la récupération des plats de l'ingrédient");
+        //    }
+        //}
 
-        /// <summary>
-        /// Récupère un ingrédient avec ses plats associés par son ID.
-        /// </summary>
-        /// <param name="ingredientId">L'ID de l'ingrédient à récupérer avec ses plats.</param>
-        /// <returns>Le DTO de l'ingrédient avec ses plats associés.</returns>
-        [HttpGet("{ingredientId}/with-plats")]
-        public async Task<ActionResult<IngredientDto>> GetIngredientWithPlats(int ingredientId)
-        {
-            try
-            {
-                var ingredient = await _ingredientService.GetIngredientWithPlats(ingredientId);
-                if (ingredient == null)
-                {
-                    return NotFound($"L'ingrédient avec l'ID {ingredientId} n'existe pas.");
-                }
-                return Ok(ingredient);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erreur lors de la récupération de l'ingrédient {ingredientId} avec ses plats");
-                return StatusCode(500, "Une erreur est survenue lors de la récupération de l'ingrédient avec ses plats");
-            }
-        }
+        ///// <summary>
+        ///// Récupère un ingrédient avec ses plats associés par son ID.
+        ///// </summary>
+        ///// <param name="ingredientId">L'ID de l'ingrédient à récupérer avec ses plats.</param>
+        ///// <returns>Le DTO de l'ingrédient avec ses plats associés.</returns>
+        //[HttpGet("{ingredientId}/with-plats")]
+        //public async Task<ActionResult<IngredientDto>> GetIngredientWithPlats(int ingredientId)
+        //{
+        //    try
+        //    {
+        //        var ingredient = await _ingredientService.GetIngredientWithPlats(ingredientId);
+        //        if (ingredient == null)
+        //        {
+        //            return NotFound($"L'ingrédient avec l'ID {ingredientId} n'existe pas.");
+        //        }
+        //        return Ok(ingredient);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Erreur lors de la récupération de l'ingrédient {ingredientId} avec ses plats");
+        //        return StatusCode(500, "Une erreur est survenue lors de la récupération de l'ingrédient avec ses plats");
+        //    }
+        //}
     }
 }

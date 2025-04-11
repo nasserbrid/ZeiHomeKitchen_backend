@@ -307,13 +307,24 @@ namespace ZeiHomeKitchen_backend.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("date_reservation");
 
-                    b.Property<int>("IdStatistique")
+                    b.Property<int?>("IdStatistique")
                         .HasColumnType("int")
                         .HasColumnName("id_statistique");
 
                     b.Property<int>("IdUtilisateur")
                         .HasColumnType("int")
                         .HasColumnName("id_utilisateur");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NombrePersonnes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Prenom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Statut")
                         .IsRequired()
@@ -540,7 +551,6 @@ namespace ZeiHomeKitchen_backend.Migrations
                     b.HasOne("ZeiHomeKitchen_backend.Models.Statistique", "StatistiqueNavigation")
                         .WithMany("Reservations")
                         .HasForeignKey("IdStatistique")
-                        .IsRequired()
                         .HasConstraintName("FK__Reservati__id_st__412EB0B6");
 
                     b.HasOne("ZeiHomeKitchen_backend.Models.Utilisateur", "UtilisateurNavigation")

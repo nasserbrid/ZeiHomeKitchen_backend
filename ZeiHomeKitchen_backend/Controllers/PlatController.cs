@@ -179,78 +179,78 @@ namespace ZeiHomeKitchen_backend.Controllers
             }
         }
 
-        /// <summary>
-        /// Ajoute un ingrédient à un plat.
-        /// </summary>
-        /// <param name="platId">ID du plat.</param>
-        /// <param name="ingredientId">ID de l'ingrédient à ajouter.</param>
-        /// <returns>Status 200 si l'ajout a réussi, sinon NotFound.</returns>
-        [HttpPost("{platId}/ingredients/{ingredientId}")]
-        public async Task<IActionResult> AddIngredientToPlatById(int platId, int ingredientId)
-        {
-            try
-            {
-                var result = await _platService.LinkIngredientToPlat(platId, ingredientId);
-                if (!result)
-                {
-                    return NotFound("Le plat ou l'ingrédient n'existe pas.");
-                }
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erreur lors de l'ajout de l'ingrédient {ingredientId} au plat {platId}");
-                return StatusCode(500, "Une erreur est survenue lors de l'ajout de l'ingrédient au plat");
-            }
-        }
+        ///// <summary>
+        ///// Ajoute un ingrédient à un plat.
+        ///// </summary>
+        ///// <param name="platId">ID du plat.</param>
+        ///// <param name="ingredientId">ID de l'ingrédient à ajouter.</param>
+        ///// <returns>Status 200 si l'ajout a réussi, sinon NotFound.</returns>
+        //[HttpPost("{platId}/ingredients/{ingredientId}")]
+        //public async Task<IActionResult> AddIngredientToPlatById(int platId, int ingredientId)
+        //{
+        //    try
+        //    {
+        //        var result = await _platService.LinkIngredientToPlat(platId, ingredientId);
+        //        if (!result)
+        //        {
+        //            return NotFound("Le plat ou l'ingrédient n'existe pas.");
+        //        }
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Erreur lors de l'ajout de l'ingrédient {ingredientId} au plat {platId}");
+        //        return StatusCode(500, "Une erreur est survenue lors de l'ajout de l'ingrédient au plat");
+        //    }
+        //}
 
-        /// <summary>
-        /// Supprime un ingrédient d'un plat.
-        /// </summary>
-        /// <param name="platId">ID du plat.</param>
-        /// <param name="ingredientId">ID de l'ingrédient à supprimer.</param>
-        /// <returns>Status 204 si la suppression a réussi, sinon NotFound.</returns>
-        [HttpDelete("{platId}/ingredients/{ingredientId}")]
-        public async Task<IActionResult> RemoveIngredientFromPlatById(int platId, int ingredientId)
-        {
-            try
-            {
-                var result = await _platService.RemoveIngredientFromPlat(platId, ingredientId);
-                if (!result)
-                {
-                    return NotFound("Le plat ou l'ingrédient n'existe pas ou n'est pas associé.");
-                }
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erreur lors de la suppression de l'ingrédient {ingredientId} du plat {platId}");
-                return StatusCode(500, "Une erreur est survenue lors de la suppression de l'ingrédient du plat");
-            }
-        }
+        ///// <summary>
+        ///// Supprime un ingrédient d'un plat.
+        ///// </summary>
+        ///// <param name="platId">ID du plat.</param>
+        ///// <param name="ingredientId">ID de l'ingrédient à supprimer.</param>
+        ///// <returns>Status 204 si la suppression a réussi, sinon NotFound.</returns>
+        //[HttpDelete("{platId}/ingredients/{ingredientId}")]
+        //public async Task<IActionResult> RemoveIngredientFromPlatById(int platId, int ingredientId)
+        //{
+        //    try
+        //    {
+        //        var result = await _platService.RemoveIngredientFromPlat(platId, ingredientId);
+        //        if (!result)
+        //        {
+        //            return NotFound("Le plat ou l'ingrédient n'existe pas ou n'est pas associé.");
+        //        }
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Erreur lors de la suppression de l'ingrédient {ingredientId} du plat {platId}");
+        //        return StatusCode(500, "Une erreur est survenue lors de la suppression de l'ingrédient du plat");
+        //    }
+        //}
 
-        /// <summary>
-        /// Récupère un plat avec ses ingrédients associés.
-        /// </summary>
-        /// <param name="platId">ID du plat.</param>
-        /// <returns>Le plat avec ses ingrédients sous forme de DTO.</returns>
-        [HttpGet("{platId}/with-ingredients")]
-        public async Task<ActionResult<PlatDto>> GetPlatDetailsWithIngredients(int platId)
-        {
-            try
-            {
-                var plat = await _platService.GetPlatDetailsWithIngredients(platId);
-                if (plat == null)
-                {
-                    return NotFound($"Le plat avec l'ID {platId} n'existe pas.");
-                }
-                return Ok(plat);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erreur lors de la récupération du plat {platId} avec ses ingrédients");
-                return StatusCode(500, "Une erreur est survenue lors de la récupération du plat avec ses ingrédients");
-            }
-        }
+        ///// <summary>
+        ///// Récupère un plat avec ses ingrédients associés.
+        ///// </summary>
+        ///// <param name="platId">ID du plat.</param>
+        ///// <returns>Le plat avec ses ingrédients sous forme de DTO.</returns>
+        //[HttpGet("{platId}/with-ingredients")]
+        //public async Task<ActionResult<PlatDto>> GetPlatDetailsWithIngredients(int platId)
+        //{
+        //    try
+        //    {
+        //        var plat = await _platService.GetPlatDetailsWithIngredients(platId);
+        //        if (plat == null)
+        //        {
+        //            return NotFound($"Le plat avec l'ID {platId} n'existe pas.");
+        //        }
+        //        return Ok(plat);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Erreur lors de la récupération du plat {platId} avec ses ingrédients");
+        //        return StatusCode(500, "Une erreur est survenue lors de la récupération du plat avec ses ingrédients");
+        //    }
+        //}
     }
 }

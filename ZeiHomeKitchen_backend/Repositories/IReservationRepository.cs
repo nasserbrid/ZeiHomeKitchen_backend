@@ -16,6 +16,8 @@ namespace ZeiHomeKitchen_backend.Repositories
         Task<Reservation> UpdateReservationStatus(int reservationId, ReservationStatusDto nouveauStatut);
         Task<bool> AddPlatToReservation(PlatReservationDto platReservationDto);
         Task<bool> RemovePlatFromReservation(PlatReservationDto platReservationDto);
+        Task<Paiement> CreatePaiementForReservation(int reservationId, decimal montant, PaiementMoyenDto moyen);
+
 
     }
 }

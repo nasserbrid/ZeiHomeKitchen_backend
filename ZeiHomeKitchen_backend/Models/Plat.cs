@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 
 namespace ZeiHomeKitchen_backend.Models;
 
@@ -17,5 +19,7 @@ public partial class Plat
 
     public virtual ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 
+
+    [JsonIgnore]
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

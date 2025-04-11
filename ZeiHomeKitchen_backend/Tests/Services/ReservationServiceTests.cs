@@ -1,18 +1,23 @@
-﻿using AutoMapper;
-using Moq;
+﻿using Moq;
 using Xunit;
 using Microsoft.Extensions.Logging;
 using ZeiHomeKitchen_backend.Dtos;
 using ZeiHomeKitchen_backend.Models;
 using ZeiHomeKitchen_backend.Repositories;
 using ZeiHomeKitchen_backend.Services;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ZeiHomeKitchen_backend.MappingConfiguration;
 
 namespace ZeiHomeKitchen_backend.Tests.Services
 {
     public class ReservationServiceTests
     {
         private readonly Mock<IReservationRepository> _mockReservationRepository;
-        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IPlatRepository> _mockPlatRepository;
+        private readonly Mock<IPaiementRepository> _mockPaiementRepository; 
         private readonly Mock<ILogger<ReservationService>> _mockLogger;
         private readonly ReservationService _reservationService;
 
@@ -20,8 +25,13 @@ namespace ZeiHomeKitchen_backend.Tests.Services
         {
             _mockLogger = new Mock<ILogger<ReservationService>>();
             _mockReservationRepository = new Mock<IReservationRepository>();
-            _mockMapper = new Mock<IMapper>();
-            _reservationService = new ReservationService(_mockReservationRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            _mockPlatRepository = new Mock<IPlatRepository>(); 
+            _mockPaiementRepository = new Mock<IPaiementRepository>(); 
+            _reservationService = new ReservationService(
+                _mockReservationRepository.Object,
+                _mockPlatRepository.Object, 
+                _mockPaiementRepository.Object, 
+                _mockLogger.Object);
         }
 
         [Fact]
@@ -30,21 +40,14 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             // ARRANGE
             var reservations = new List<Reservation>
             {
-                new Reservation { IdReservation = 1, DateReservation = new DateTime(2025, 04, 01), Statut = ReservationStatusDto.EnAttente.ToString(), IdUtilisateur = 1 },
-                new Reservation { IdReservation = 2, DateReservation = new DateTime(2025, 03, 31), Statut = ReservationStatusDto.Annulee.ToString(), IdUtilisateur = 2 }
+                new Reservation { IdReservation = 1, DateReservation = new DateTime(2025, 04, 01), Adresse = "123 Rue Exemple", Statut = ReservationStatusDto.EnAttente.ToString(), IdStatistique = 1, IdUtilisateur = 1, NombrePersonnes = 1 },
+                new Reservation { IdReservation = 2, DateReservation = new DateTime(2025, 03, 31), Adresse = "456 Avenue Test", Statut = ReservationStatusDto.Annulee.ToString(), IdStatistique = 2, IdUtilisateur = 2, NombrePersonnes = 5 }
             };
 
-            var reservationDtos = new List<ReservationDto>
-            {
-                new ReservationDto(1, new DateTime(2025, 04, 01), ReservationStatusDto.EnAttente, 1),
-                new ReservationDto(2, new DateTime(2025, 03, 31), ReservationStatusDto.Annulee, 2)
-            };
+            var reservationDtos = reservations.Select(r => r.ToDto()).ToList();
 
             _mockReservationRepository.Setup(repo => repo.GetAllReservations())
                 .ReturnsAsync(reservations);
-
-            _mockMapper.Setup(m => m.Map<IEnumerable<ReservationDto>>(It.IsAny<IEnumerable<Reservation>>()))
-                .Returns(reservationDtos);
 
             // ACT
             var result = await _reservationService.GetAllReservations();
@@ -59,14 +62,11 @@ namespace ZeiHomeKitchen_backend.Tests.Services
         public async Task TestGetReservationById()
         {
             // ARRANGE
-            var reservation = new Reservation { IdReservation = 1, DateReservation = new DateTime(2025, 04, 01), Statut = ReservationStatusDto.EnAttente.ToString(), IdUtilisateur = 1 };
-            var reservationDto = new ReservationDto(1, new DateTime(2025, 04, 01), ReservationStatusDto.EnAttente, 1);
+            var reservation = new Reservation { IdReservation = 1, DateReservation = new DateTime(2025, 04, 01), Adresse = "4 Place de l'Abbaye", Statut = ReservationStatusDto.EnAttente.ToString(), IdStatistique = 1, IdUtilisateur = 1, NombrePersonnes = 2 };
+            var reservationDto = reservation.ToDto();
 
             _mockReservationRepository.Setup(repo => repo.GetReservationById(1))
                 .ReturnsAsync(reservation);
-
-            _mockMapper.Setup(m => m.Map<ReservationDto>(It.IsAny<Reservation>()))
-                .Returns(reservationDto);
 
             // ACT
             var result = await _reservationService.GetReservationById(1);
@@ -98,17 +98,36 @@ namespace ZeiHomeKitchen_backend.Tests.Services
         }
 
         [Fact]
-        public async Task TestCreateReservation()
+        public async Task TestCreateReservation_WithPlats()
         {
             // ARRANGE
-            var reservationEntity = new Reservation { IdReservation = 3, DateReservation = new DateTime(2025, 04, 02), Statut = ReservationStatusDto.Confirmee.ToString(), IdUtilisateur = 1 };
-            var reservationDto = new ReservationDto(3, new DateTime(2025, 04, 02), ReservationStatusDto.Confirmee, 1);
+            var reservationEntity = new Reservation
+            {
+                IdReservation = 3,
+                DateReservation = new DateTime(2025, 04, 02),
+                Adresse = "19F Rue Roger Martin Du Gard",
+                Statut = ReservationStatusDto.Confirmee.ToString(),
+                IdStatistique = 3,
+                IdUtilisateur = 3,
+                NombrePersonnes = 6
+            };
 
-            _mockMapper.Setup(m => m.Map<Reservation>(reservationDto)).Returns(reservationEntity);
+            var reservationDto = new ReservationDto(3, new DateTime(2025, 04, 02), "19F Rue Roger Martin Du Gard", ReservationStatusDto.Confirmee, "NomUtilisateur", "PrenomUtilisateur", 6)
+            {
+                PlatIds = new List<int> { 1, 2 } 
+            };
+
             _mockReservationRepository.Setup(repo => repo.CreateReservation(It.IsAny<Reservation>()))
                 .ReturnsAsync(reservationEntity);
-            _mockMapper.Setup(m => m.Map<ReservationDto>(reservationEntity))
-                .Returns(reservationDto);
+
+           
+            var plat = new Plat { IdPlat = 1, Nom = "Plat 1", Prix = 10.0m }; 
+            _mockPlatRepository.Setup(repo => repo.GetPlatById(1))
+                .ReturnsAsync(plat);
+
+           
+            _mockPaiementRepository.Setup(repo => repo.CreatePaiement(It.IsAny<Paiement>()))
+                .ReturnsAsync(new Paiement());
 
             // ACT
             var result = await _reservationService.CreateReservation(reservationDto);
@@ -119,10 +138,34 @@ namespace ZeiHomeKitchen_backend.Tests.Services
             Assert.Equal(reservationDto.IdReservation, okResult.IdReservation);
             Assert.Equal(reservationDto.DateReservation, okResult.DateReservation);
             Assert.Equal(reservationDto.Statut, okResult.Statut);
-            Assert.Equal(reservationDto.IdUtilisateur, okResult.IdUtilisateur);
-            _mockMapper.Verify(m => m.Map<Reservation>(reservationDto), Times.Once);
+            Assert.Equal(reservationDto.Nom, okResult.Nom);
+            Assert.Equal(reservationDto.Prenom, okResult.Prenom);
+            Assert.Equal(reservationDto.NombrePersonnes, okResult.NombrePersonnes);
             _mockReservationRepository.Verify(repo => repo.CreateReservation(It.IsAny<Reservation>()), Times.Once);
-            _mockMapper.Verify(m => m.Map<ReservationDto>(reservationEntity), Times.Once);
+        }
+
+        [Fact]
+        public void MappingReservationToReservationDto()
+        {
+            // Arrange
+            var reservation = new Reservation
+            {
+                IdReservation = 1,
+                DateReservation = DateTime.Now,
+                Adresse = "35 Rue Chamars",
+                Statut = ReservationStatusDto.EnAttente.ToString(),
+                IdStatistique = 1,
+                IdUtilisateur = 1
+            };
+
+            // Act
+            var reservationDto = reservation.ToDto();
+
+            // Assert
+            Assert.NotNull(reservationDto);
+            Assert.Equal(reservation.IdReservation, reservationDto.IdReservation);
+            Assert.Equal(reservation.DateReservation, reservationDto.DateReservation);
+            Assert.Equal(reservation.Statut, reservationDto.Statut.ToString());
         }
     }
 }

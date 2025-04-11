@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZeiHomeKitchen_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c1284bf0ce4a3f08c180d534fa0abc3dabaed04")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e633bd33deee3d586581635317fc2fdb46c2d89")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZeiHomeKitchen_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZeiHomeKitchen_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

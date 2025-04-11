@@ -32,6 +32,37 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.AuthController",
+    "Method": "GetCurrentUser",
+    "RelativePath": "api/Auth/user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.AuthController",
+    "Method": "CheckUserExists",
+    "RelativePath": "api/Auth/user/exists",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
     "Method": "GetAllIngredients",
     "RelativePath": "api/Ingredient",
@@ -151,22 +182,16 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
-    "Method": "GetPlatsByIngredientId",
-    "RelativePath": "api/Ingredient/{ingredientId}/plats",
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "Method": "GetAllPaiements",
+    "RelativePath": "api/Paiement",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ingredientId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.PlatDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.PaiementDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -177,22 +202,22 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
-    "Method": "GetIngredientWithPlats",
-    "RelativePath": "api/Ingredient/{ingredientId}/with-plats",
-    "HttpMethod": "GET",
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "Method": "CreatePaiement",
+    "RelativePath": "api/Paiement",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ingredientId",
-        "Type": "System.Int32",
+        "Name": "paiementDto",
+        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.IngredientDto",
+        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -201,6 +226,74 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "Method": "UpdatePaiement",
+    "RelativePath": "api/Paiement",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "paiementDto",
+        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "Method": "GetPaiementById",
+    "RelativePath": "api/Paiement/{idPaiement}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPaiement",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "Method": "DeletePaiement",
+    "RelativePath": "api/Paiement/{idPaiement}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPaiement",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
@@ -363,74 +456,6 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
-    "Method": "AddIngredientToPlatById",
-    "RelativePath": "api/Plat/{platId}/ingredients/{ingredientId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "platId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "ingredientId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
-    "Method": "RemoveIngredientFromPlatById",
-    "RelativePath": "api/Plat/{platId}/ingredients/{ingredientId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "platId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "ingredientId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
-    "Method": "GetPlatDetailsWithIngredients",
-    "RelativePath": "api/Plat/{platId}/with-ingredients",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "platId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
     "Method": "GetAllReservations",
     "RelativePath": "api/Reservation",
@@ -548,6 +573,32 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "Method": "GetReservationForPlats",
+    "RelativePath": "api/Reservation/{reservationId}/plats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reservationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",

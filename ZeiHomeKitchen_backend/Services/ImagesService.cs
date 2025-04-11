@@ -41,7 +41,7 @@ namespace ZeiHomeKitchen_backend.Services
                     cropHeight = (int)(cropWidth * 1); // Carré 1:1
                 }
 
-                // Recadrer au centre
+                // Recadrage au centre
                 var cropRectangle = new Rectangle(
                     (image.Width - cropWidth) / 2,
                     (image.Height - cropHeight) / 2,
@@ -59,7 +59,7 @@ namespace ZeiHomeKitchen_backend.Services
                 );
 
 
-                // Ajouter un effet d’arrondi aux coins avec ImageSharp.Drawing
+                // Ajout d'un effet d’arrondi aux coins avec ImageSharp.Drawing
                 // Rayon de 20px
                 ApplyRoundedCorners(image, 20);
 
@@ -81,7 +81,7 @@ namespace ZeiHomeKitchen_backend.Services
 
                     // Convertir l'image en Base64 pour l'envoi
                     string base64Image = Convert.ToBase64String(finalBytes);
-                    Console.WriteLine($"Base64 envoyé (longueur) : {base64Image.Length}"); // Log de la longueur de la chaîne Base64
+                    Console.WriteLine($"Base64 envoyé (longueur) : {base64Image.Length}"); 
 
                     
                     return finalBytes;

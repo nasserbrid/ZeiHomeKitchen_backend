@@ -1,201 +1,250 @@
 ﻿using AutoMapper;
+using Newtonsoft.Json;
 using ZeiHomeKitchen_backend.Dtos;
+using ZeiHomeKitchen_backend.MappingConfiguration;
 using ZeiHomeKitchen_backend.Models;
 using ZeiHomeKitchen_backend.Repositories;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ZeiHomeKitchen_backend.Services
 {
     public class ReservationService : IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
-        private readonly IMapper _mapper;
+        private readonly IPlatRepository _platRepository;
+        private readonly IPaiementRepository _paiementRepository;
         private readonly ILogger<ReservationService> _logger;
 
-        public ReservationService(IReservationRepository reservationRepository, IMapper mapper, ILogger<ReservationService> logger)
+        public ReservationService(
+            IReservationRepository reservationRepository,
+            IPlatRepository platRepository,
+            IPaiementRepository paiementRepository,
+            ILogger<ReservationService> logger)
         {
             _reservationRepository = reservationRepository;
-            _mapper = mapper;
+            _paiementRepository = paiementRepository;
+            _platRepository = platRepository;
             _logger = logger;
-            
         }
 
         /// <summary>
-        /// Ajoute un plat à une réservation existante.
+        /// Récupère toutes les réservations.
         /// </summary>
-        /// <param name="platReservationDto">Données du plat et de la réservation.</param>
-        /// <returns>True si l'ajout est réussi, sinon False.</returns>
-        public async Task<bool> AddPlatToReservation(PlatReservationDto platReservationDto)
+        public async Task<IEnumerable<ReservationDto>> GetAllReservations()
         {
-            
-            if (platReservationDto == null)
+            try
             {
-                throw new ArgumentNullException(nameof(platReservationDto));
+                var reservations = await _reservationRepository.GetAllReservations();
+                return reservations.Select(r => r.ToDto());
             }
-
-            var reservation = await _reservationRepository.GetReservationById(platReservationDto.IdReservation);
-
-            if (reservation == null) 
-            { 
-                throw new KeyNotFoundException($"Aucune réservation trouvée avec l'ID {platReservationDto.IdReservation}");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la récupération des réservations depuis le dépôt");
+                throw; 
             }
+        }
 
-            var plat = await _reservationRepository.GetReservationById(platReservationDto.IdPlat);
 
-            return await _reservationRepository.AddPlatToReservation(platReservationDto);
-
+        /// <summary>
+        /// Récupère une réservation par son ID.
+        /// </summary>
+        public async Task<ReservationDto> GetReservationById(int reservationId)
+        {
+            var reservation = await _reservationRepository.GetReservationById(reservationId);
+            return reservation?.ToDto();
         }
 
         /// <summary>
-        /// Crée une nouvelle réservation.
+        /// Crée une nouvelle réservation et déclenche le paiement.
         /// </summary>
-        /// <param name="reservationDto">Données de la réservation.</param>
-        /// <returns>La réservation créée.</returns>
         public async Task<ReservationDto> CreateReservation(ReservationDto reservationDto)
         {
             if (reservationDto == null)
-            {
                 throw new ArgumentNullException(nameof(reservationDto));
+
+            var reservationEntity = reservationDto.ToModel();
+
+            if (reservationDto.PlatIds != null && reservationDto.PlatIds.Any())
+            {
+                foreach (var platId in reservationDto.PlatIds)
+                {
+                    var plat = await _platRepository.GetPlatById(platId); 
+                    if (plat != null)
+                    {
+                        reservationEntity.Plats.Add(plat);
+                    }
+                }
             }
 
-            _logger.LogInformation("Mapping de ReservationDto vers Reservation.");
-            var reservationEntity = _mapper.Map<Reservation>(reservationDto);
+            // Créer la réservation
+            var created = await _reservationRepository.CreateReservation(reservationEntity);
 
-            _logger.LogInformation("Enregistrement de l'entité en base de données.");
-            var createReservation = await _reservationRepository.CreateReservation(reservationEntity);
+            
+            var completeReservation = await _reservationRepository.GetReservationById(created.IdReservation);
 
-            _logger.LogInformation("Mapping de l'entité créée vers ReservationDto.");
-            return _mapper.Map<ReservationDto>(createReservation);
+            decimal montantTotal = await CalculateMontantForReservation(created.IdReservation);
+            await CreatePaiementForReservation(created.IdReservation, montantTotal, PaiementMoyenDto.CB);
+
+            //_logger.LogInformation($"Réservation créée avec succès: {JsonConvert.SerializeObject(created)}");
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            _logger.LogInformation($"Réservation créée avec succès: {JsonConvert.SerializeObject(created, settings)}");
+
+            //return created.ToDto();
+            return completeReservation.ToDto();
+        }
+
+        //public async Task<ReservationDto> CreateReservation(ReservationDto reservationDto)
+        //{
+        //    if (reservationDto == null)
+        //        throw new ArgumentNullException(nameof(reservationDto));
+
+        //    var reservationEntity = reservationDto.ToModel();
+
+        //    // Log des données de la réservation avant la création
+        //    _logger.LogInformation($"Tentative de création de réservation: {JsonConvert.SerializeObject(reservationEntity)}");
+
+        //    var created = await _reservationRepository.CreateReservation(reservationEntity);
+
+        //    // Vérifie les plats associés et calcule le montant
+        //    decimal montantTotal = await CalculateMontantForReservation(created.IdReservation);
+        //    await CreatePaiementForReservation(created.IdReservation, montantTotal, PaiementMoyenDto.CB);
+
+        //    _logger.LogInformation($"Réservation créée avec succès: {JsonConvert.SerializeObject(created)}");
+
+        //    return created.ToDto();
+        //}
+
+        //public async Task<ReservationDto> CreateReservation(ReservationDto reservationDto)
+        //{
+        //    if (reservationDto == null)
+        //        throw new ArgumentNullException(nameof(reservationDto));
+
+        //    var reservationEntity = reservationDto.ToModel();
+        //    var created = await _reservationRepository.CreateReservation(reservationEntity);
+
+        //    // Calculer le montant total pour la réservation
+        //    decimal montantTotal = await CalculateMontantForReservation(created.IdReservation);
+        //    await CreatePaiementForReservation(created.IdReservation, montantTotal, PaiementMoyenDto.CB);
+
+        //    _logger.LogInformation($"Réservation créée avec succès: {JsonConvert.SerializeObject(created)}");
+
+        //    return created.ToDto();
+        //}
+
+        /// <summary>
+        /// Met à jour une réservation existante.
+        /// </summary>
+        public async Task<ReservationDto> UpdateReservation(ReservationDto reservationDto)
+        {
+            if (reservationDto == null)
+                throw new ArgumentNullException(nameof(reservationDto));
+
+            var entity = reservationDto.ToModel();
+            var updated = await _reservationRepository.UpdateReservation(entity);
+            return updated.ToDto();
         }
 
         /// <summary>
-        /// Supprime une réservation par son identifiant.
+        /// Supprime une réservation par son ID.
         /// </summary>
-        /// <param name="reservationId">Identifiant de la réservation.</param>
-        /// <returns>True si la suppression est réussie, sinon False.</returns>
         public async Task<bool> DeleteReservationById(int reservationId)
         {
             return await _reservationRepository.DeleteReservationById(reservationId);
         }
 
         /// <summary>
-        /// Récupère toutes les réservations.
-        /// </summary>
-        /// <returns>Liste des réservations.</returns>
-        public async Task<IEnumerable<ReservationDto>> GetAllReservations()
-        {
-            var reservations = await _reservationRepository.GetAllReservations();
-            return _mapper.Map<IEnumerable<ReservationDto>>(reservations);
-        }
-
-        /// <summary>
-        /// Récupère une réservation par son identifiant.
-        /// </summary>
-        /// <param name="reservationId">Identifiant de la réservation.</param>
-        /// <returns>La réservation correspondante.</returns>
-        public async Task<ReservationDto> GetReservationById(int reservationId)
-        {
-            var reservationById = await _reservationRepository.GetReservationById(reservationId);
-            return _mapper.Map<ReservationDto>(reservationById);
-        }
-
-        /// <summary>
         /// Récupère une réservation avec les plats associés.
         /// </summary>
-        /// <param name="reservationId">Identifiant de la réservation.</param>
-        /// <returns>La réservation contenant les informations des plats associés.</returns>
         public async Task<ReservationDto> GetReservationForPlats(int reservationId)
         {
-            var reservationForPlats = await _reservationRepository.GetReservationForPlats(reservationId);
-            return _mapper.Map<ReservationDto>(reservationForPlats);
-        }
-
-        /// <summary>
-        /// Récupère toutes les réservations pour une date donnée.
-        /// </summary>
-        /// <param name="date">Date des réservations à récupérer.</param>
-        /// <returns>Liste des réservations correspondant à la date spécifiée.</returns>
-        public async Task<IEnumerable<ReservationDto>> GetReservationsByDate(DateTime date)
-        {
-            var reservationsByDate = await _reservationRepository.GetReservationsByDate(date);
-            return _mapper.Map<IEnumerable<ReservationDto>>(reservationsByDate);
+            var reservation = await _reservationRepository.GetReservationForPlats(reservationId);
+            return reservation?.ToDto();
         }
 
         /// <summary>
         /// Récupère toutes les réservations effectuées par un utilisateur donné.
         /// </summary>
-        /// <param name="utilisateurId">Identifiant de l'utilisateur.</param>
-        /// <returns>Liste des réservations effectuées par l'utilisateur spécifié.</returns>
         public async Task<IEnumerable<ReservationDto>> GetReservationsByUserId(int utilisateurId)
         {
-            var reservationsByUserId = await _reservationRepository.GetReservationsByUserId(utilisateurId);
-            return _mapper.Map<IEnumerable<ReservationDto>>(reservationsByUserId);
-        }
-
-
-        /// <summary>
-        /// Supprime un plat à une réservation existante.
-        /// </summary>
-        /// <param name="platReservationDto">Données du plat et de la réservation.</param>
-        /// <returns>True si la suppression est réussie, sinon False.</returns>
-        public async Task<bool> RemovePlatFromReservation(PlatReservationDto platReservationDto)
-        {
-            if (platReservationDto == null)
-            {
-                throw new ArgumentNullException(nameof(platReservationDto));
-            }
-
-            var reservation = await _reservationRepository.GetReservationById(platReservationDto.IdReservation);
-
-            if (reservation == null) 
-            {
-                throw new KeyNotFoundException($"Aucune réservation trouvée avec l'ID {platReservationDto.IdReservation}");
-            }
-
-            var plat = await _reservationRepository.GetReservationById(platReservationDto.IdPlat);
-
-            return await _reservationRepository.RemovePlatFromReservation(platReservationDto);
+            var reservations = await _reservationRepository.GetReservationsByUserId(utilisateurId);
+            return reservations.Select(r => r.ToDto());
         }
 
         /// <summary>
-        /// Met à jour une réservation existante.
+        /// Récupère toutes les réservations effectuées à une date donnée.
         /// </summary>
-        /// <param name="reservationDto">Données mises à jour de la réservation.</param>
-        /// <returns>La réservation mise à jour.</returns>
-        public async Task<ReservationDto> UpdateReservation(ReservationDto reservationDto)
+        public async Task<IEnumerable<ReservationDto>> GetReservationsByDate(DateTime date)
         {
-            //Je transforme ReservationDto en entité Reservation
-            var reservationEntity = _mapper.Map<Reservation>(reservationDto);
-
-            //Je mets à jour la réservation dans la base de données
-            var updatedReservation = await _reservationRepository.UpdateReservation(reservationEntity);
-
-            //On effectue le mapping l'entité mise à jour vers un DTO (reservationDto).
-            return _mapper.Map<ReservationDto>(updatedReservation);
+            var reservations = await _reservationRepository.GetReservationsByDate(date);
+            return reservations.Select(r => r.ToDto());
         }
 
         /// <summary>
         /// Met à jour le statut d'une réservation.
         /// </summary>
-        /// <param name="reservationId">Identifiant de la réservation.</param>
-        /// <param name="nouveauStatut">Nouveau statut de la réservation.</param>
-        /// <returns>La réservation mise à jour avec le nouveau statut.</returns>
         public async Task<ReservationDto> UpdateReservationStatus(int reservationId, ReservationStatusDto nouveauStatut)
         {
-            //Je vérifie si la réservation existe
-            var reservation = await _reservationRepository.GetReservationById(reservationId);
-            if (reservation == null)
+            var updated = await _reservationRepository.UpdateReservationStatus(reservationId, nouveauStatut);
+            return updated?.ToDto();
+        }
+
+        /// <summary>
+        /// Ajoute un plat à une réservation existante.
+        /// </summary>
+        public async Task<bool> AddPlatToReservation(PlatReservationDto platReservationDto)
+        {
+            if (platReservationDto == null)
+                throw new ArgumentNullException(nameof(platReservationDto));
+
+            return await _reservationRepository.AddPlatToReservation(platReservationDto);
+        }
+
+        /// <summary>
+        /// Supprime un plat d'une réservation existante.
+        /// </summary>
+        public async Task<bool> RemovePlatFromReservation(PlatReservationDto platReservationDto)
+        {
+            if (platReservationDto == null)
+                throw new ArgumentNullException(nameof(platReservationDto));
+
+            return await _reservationRepository.RemovePlatFromReservation(platReservationDto);
+        }
+
+        /// <summary>
+        /// Calcule le montant total d'une réservation, incluant la TVA.
+        /// </summary>
+        public async Task<decimal> CalculateMontantForReservation(int reservationId)
+        {
+            var reservation = await _reservationRepository.GetReservationForPlats(reservationId);
+            if (reservation == null || reservation.Plats == null || !reservation.Plats.Any())
+                throw new Exception("Aucune réservation ou plat trouvé pour le calcul du montant.");
+
+            decimal total = reservation.Plats.Sum(plat => plat.Prix.GetValueOrDefault() * reservation.NombrePersonnes);
+            decimal tva = 0.20m; 
+            total += total * tva;
+
+            return total;
+        }
+
+        /// <summary>
+        /// Crée un paiement pour une réservation donnée.
+        /// </summary>
+        public async Task<Paiement> CreatePaiementForReservation(int reservationId, decimal montant, PaiementMoyenDto moyen)
+        {
+            if (montant <= 0)
+                throw new ArgumentException("Le montant doit être supérieur à zéro.");
+
+            var paiement = new Paiement
             {
-                throw new KeyNotFoundException($"Aucune réservation trouvée avec l'ID {reservationId}");
-            }
+                Montant = montant,
+                Statut = PaiementStatusDto.EnAttente.ToString(),
+                Moyen = moyen.ToString(),
+                IdReservation = reservationId
+            };
 
-            //Si la réservation existe à ce moment là je modifie son statut
-            reservation.Statut = nouveauStatut.ToString();
-
-            //Je mets à jour la réservation en base de données
-            var updatedReservation = await _reservationRepository.UpdateReservation(reservation);
-
-            return _mapper.Map<ReservationDto>(updatedReservation);
+            return await _paiementRepository.CreatePaiement(paiement);
         }
     }
 }

@@ -19,9 +19,11 @@ namespace ZeiHomeKitchen_backend.Services
         {
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
-                // Vous pouvez ajouter d'autres claims si nécessaire
+                new Claim(ClaimTypes.Email, user.Email),
+               // new Claim("Id", user.Id.ToString())
+                
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secretKey));

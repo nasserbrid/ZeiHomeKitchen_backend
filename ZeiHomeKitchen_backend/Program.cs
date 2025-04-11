@@ -2,10 +2,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using ZeiHomeKitchen_backend.MappingConfiguration;
 using ZeiHomeKitchen_backend.Models;
 using ZeiHomeKitchen_backend.Repositories;
 using ZeiHomeKitchen_backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization; 
+
 
 
 
@@ -25,7 +35,27 @@ builder.Services.AddIdentity<Utilisateur, IdentityRole<int>>()
     .AddEntityFrameworkStores<ZeiHomeKitchenContext>()
     .AddDefaultTokenProviders();
 
+var jwtKey = builder.Configuration["Jwt:SecretKey"];
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = key,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true
+    };
+});
 //J'ajoute IngredientRepository dans program.cs
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 
@@ -42,6 +72,12 @@ builder.Services.AddScoped<IRegisterRepository, RegisterRepository>();
 //J'ajoute ReservationRepository dans program.cs
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
+//builder.Services.AddScoped<IStatistiqueRepository, StatistiqueRepository>();
+builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
+
+builder.Services.AddScoped<IPaiementRepository, PaiementRepository>();
+
+builder.Services.AddScoped<IStatistiqueRepository, StatistiqueRepository>();
 
 //J'ajoute IngredientService dans program.cs
 builder.Services.AddScoped<IIngredientService, IngredientService>();
@@ -54,6 +90,9 @@ builder.Services.AddScoped<IImagesService, ImagesService>();
 
 //J'ajoute LoginService dans program.cs
 builder.Services.AddScoped<ILoginService, LoginService>();
+// Ajoutez les lignes suivantes dans la méthode ConfigureServices
+builder.Services.AddScoped<ICreateReservationRepository, CreateReservationRepository>();
+builder.Services.AddScoped<ICreateReservationService, CreateReservationService>();
 
 //J'ajoute RegisterService dans program.cs
 builder.Services.AddScoped<IRegisterService, RegisterService>();
@@ -61,9 +100,20 @@ builder.Services.AddScoped<IRegisterService, RegisterService>();
 //J'ajoute ReservationService dans program.cs
 builder.Services.AddScoped<IReservationService, ReservationService>();
 
+builder.Services.AddScoped<IUtilisateurService, UtilisateurService>();
+
+builder.Services.AddScoped<IPaiementService, PaiementService>();
+
+builder.Services.AddScoped<IStatistiqueService, StatistiqueService>();
+
+builder.Services.AddHttpContextAccessor();
+
+//builder.Services.AddScoped<IStatistiqueService, StatistiqueService>();
+
 builder.Services.AddScoped<TokenService>(provider =>
 {
-    var secretKey = builder.Configuration["Jwt:SecretKey"]; // Assurez-vous que cela est configuré dans votre appsettings.json
+    //Déjà configuré dans votre appsettings.json
+    var secretKey = builder.Configuration["Jwt:SecretKey"]; 
     return new TokenService(secretKey);
 });
 
@@ -71,10 +121,41 @@ builder.Services.AddScoped<TokenService>(provider =>
 
 
 //J'ajoute AutoMapper dans Program.cs
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+//builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+//        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+//        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+//        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 
+//    });
+
+//builder.Services.AddControllers()
+//    .AddNewtonsoftJson(options =>
+//    {
+//        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+//        options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+//    });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    })
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+        // Ajoutez cette ligne pour être sûr
+        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    });
 //Me permets d'avoir une taille plus conséquente pour les images en base64.
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
@@ -83,35 +164,44 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-//Mise en place d'une sécurité de mon api (on ne touche pas à mon api ok)
-//builder.Services.AddSwaggerGen(c => {
-//    c.SwaggerDoc("v1", new OpenApiInfo
-//    {
-//        Title = "ZeiHomeKitchen_backend",
-//        Version = "v1"
-//    });
-//    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-//    {
-//        Name = "Authorization",
-//        Type = SecuritySchemeType.ApiKey,
-//        Scheme = "Bearer",
-//        BearerFormat = "JWT",
-//        In = ParameterLocation.Header,
-//        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
-//    });
-//    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-//        {
-//            new OpenApiSecurityScheme {
-//                Reference = new OpenApiReference {
-//                    Type = ReferenceType.SecurityScheme,
-//                        Id = "Bearer"
-//                }
-//            },
-//            new string[] {}
-//        }
-//    });
-//});
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "ZeiHomeKitchen_backend", Version = "v1" });
+
+    // Ajoute la configuration pour le JWT Bearer
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
+
+
+
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -137,16 +227,18 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseDeveloperExceptionPage(); 
+
 app.MapControllers();
 
 
-// Créer les rôles par défaut
+// Création des rôles par défaut
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Utilisateur>>();
 
-    // Ici ajout des rôles Admin et User venant d'IdentityUser
+    // Ici j'ajoute des rôles Admin et User venant d'IdentityUser
     string[] roleNames = { "Admin", "User" };
     IdentityResult roleResult;
 
@@ -155,7 +247,7 @@ using (var scope = app.Services.CreateScope())
         var roleExist = await roleManager.RoleExistsAsync(roleName);
         if (!roleExist)
         {
-            // Créer le rôle si il n'existe pas
+            //Je crée le rôle s'il n'existe pas
             roleResult = await roleManager.CreateAsync(new IdentityRole<int>(roleName));
         }
     }
