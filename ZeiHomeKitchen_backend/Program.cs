@@ -3,10 +3,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using ZeiHomeKitchen_backend.MappingConfiguration;
-using ZeiHomeKitchen_backend.Models;
-using ZeiHomeKitchen_backend.Repositories;
-using ZeiHomeKitchen_backend.Services;
+using ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -14,7 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization; 
+using Newtonsoft.Json.Serialization;
+using ZeiHomeKitchen_backend.Domain.Models;
+using ZeiHomeKitchen_backend.Domain.Services;
+using ZeiHomeKitchen_backend.Application.Ports;
+using ZeiHomeKitchen_backend.Infrastructure.Repositories;
+using ZeiHomeKitchen_backend.Infrastructure.Data;
 
 
 

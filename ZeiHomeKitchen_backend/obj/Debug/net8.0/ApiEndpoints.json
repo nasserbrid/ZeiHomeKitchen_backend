@@ -1,6 +1,6 @@
 [
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.AuthController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
     "HttpMethod": "POST",
@@ -9,14 +9,14 @@
     "Parameters": [
       {
         "Name": "loginDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.LoginDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.LoginDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.AuthController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.AuthController",
     "Method": "Register",
     "RelativePath": "api/Auth/register",
     "HttpMethod": "POST",
@@ -25,14 +25,14 @@
     "Parameters": [
       {
         "Name": "registerDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.RegisterDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.RegisterDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.AuthController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.AuthController",
     "Method": "GetCurrentUser",
     "RelativePath": "api/Auth/user",
     "HttpMethod": "GET",
@@ -42,7 +42,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.AuthController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.AuthController",
     "Method": "CheckUserExists",
     "RelativePath": "api/Auth/user/exists",
     "HttpMethod": "GET",
@@ -63,7 +63,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.IngredientController",
     "Method": "GetAllIngredients",
     "RelativePath": "api/Ingredient",
     "HttpMethod": "GET",
@@ -72,7 +72,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.IngredientDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -83,7 +83,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.IngredientController",
     "Method": "CreateIngredient",
     "RelativePath": "api/Ingredient",
     "HttpMethod": "POST",
@@ -92,13 +92,13 @@
     "Parameters": [
       {
         "Name": "ingredientDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.IngredientDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.IngredientDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -109,7 +109,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.IngredientController",
     "Method": "GetIngredientById",
     "RelativePath": "api/Ingredient/{ingredientId}",
     "HttpMethod": "GET",
@@ -124,7 +124,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.IngredientDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -135,7 +135,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.IngredientController",
     "Method": "UpdateIngredient",
     "RelativePath": "api/Ingredient/{ingredientId}",
     "HttpMethod": "PUT",
@@ -149,13 +149,13 @@
       },
       {
         "Name": "ingredientDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.IngredientDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.IngredientDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -166,7 +166,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.IngredientController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.IngredientController",
     "Method": "DeleteIngredient",
     "RelativePath": "api/Ingredient/{ingredientId}",
     "HttpMethod": "DELETE",
@@ -182,7 +182,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PaiementController",
     "Method": "GetAllPaiements",
     "RelativePath": "api/Paiement",
     "HttpMethod": "GET",
@@ -191,7 +191,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.PaiementDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -202,7 +202,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PaiementController",
     "Method": "CreatePaiement",
     "RelativePath": "api/Paiement",
     "HttpMethod": "POST",
@@ -211,13 +211,13 @@
     "Parameters": [
       {
         "Name": "paiementDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -228,7 +228,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PaiementController",
     "Method": "UpdatePaiement",
     "RelativePath": "api/Paiement",
     "HttpMethod": "PUT",
@@ -237,13 +237,13 @@
     "Parameters": [
       {
         "Name": "paiementDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -254,7 +254,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PaiementController",
     "Method": "GetPaiementById",
     "RelativePath": "api/Paiement/{idPaiement}",
     "HttpMethod": "GET",
@@ -269,7 +269,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PaiementDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -280,7 +280,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PaiementController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PaiementController",
     "Method": "DeletePaiement",
     "RelativePath": "api/Paiement/{idPaiement}",
     "HttpMethod": "DELETE",
@@ -296,7 +296,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "GetAllPlats",
     "RelativePath": "api/Plat",
     "HttpMethod": "GET",
@@ -305,7 +305,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.PlatDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Domain.Dtos.PlatDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -316,7 +316,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "CreateNewPlat",
     "RelativePath": "api/Plat",
     "HttpMethod": "POST",
@@ -346,7 +346,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PlatDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -357,7 +357,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "GetPlatById",
     "RelativePath": "api/Plat/{platId}",
     "HttpMethod": "GET",
@@ -372,7 +372,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PlatDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -383,7 +383,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "UpdateExistingPlat",
     "RelativePath": "api/Plat/{platId}",
     "HttpMethod": "PUT",
@@ -397,13 +397,13 @@
       },
       {
         "Name": "platDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PlatDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PlatDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -414,7 +414,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "DeletePlatById",
     "RelativePath": "api/Plat/{platId}",
     "HttpMethod": "DELETE",
@@ -430,7 +430,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.PlatController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "GetIngredientsByPlatId",
     "RelativePath": "api/Plat/{platId}/ingredients",
     "HttpMethod": "GET",
@@ -445,7 +445,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.IngredientDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Domain.Dtos.IngredientDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -456,7 +456,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "GetAllReservations",
     "RelativePath": "api/Reservation",
     "HttpMethod": "GET",
@@ -465,7 +465,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Dtos.ReservationDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto, ZeiHomeKitchen_backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -476,7 +476,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "CreateReservation",
     "RelativePath": "api/Reservation",
     "HttpMethod": "POST",
@@ -485,13 +485,13 @@
     "Parameters": [
       {
         "Name": "reservationDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -502,7 +502,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "GetReservationById",
     "RelativePath": "api/Reservation/{reservationId}",
     "HttpMethod": "GET",
@@ -517,7 +517,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -528,7 +528,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "UpdateReservation",
     "RelativePath": "api/Reservation/{reservationId}",
     "HttpMethod": "PUT",
@@ -542,13 +542,13 @@
       },
       {
         "Name": "reservationDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -559,7 +559,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "DeleteReservation",
     "RelativePath": "api/Reservation/{reservationId}",
     "HttpMethod": "DELETE",
@@ -575,7 +575,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "GetReservationForPlats",
     "RelativePath": "api/Reservation/{reservationId}/plats",
     "HttpMethod": "GET",
@@ -590,7 +590,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ZeiHomeKitchen_backend.Dtos.ReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.ReservationDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -601,7 +601,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "AddPlatToReservation",
     "RelativePath": "api/Reservation/plat",
     "HttpMethod": "POST",
@@ -610,7 +610,7 @@
     "Parameters": [
       {
         "Name": "platReservationDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PlatReservationDto",
         "IsRequired": true
       }
     ],
@@ -627,7 +627,7 @@
     ]
   },
   {
-    "ContainingType": "ZeiHomeKitchen_backend.Controllers.ReservationController",
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.ReservationController",
     "Method": "RemovePlatFromReservation",
     "RelativePath": "api/Reservation/plat",
     "HttpMethod": "DELETE",
@@ -636,7 +636,7 @@
     "Parameters": [
       {
         "Name": "platReservationDto",
-        "Type": "ZeiHomeKitchen_backend.Dtos.PlatReservationDto",
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PlatReservationDto",
         "IsRequired": true
       }
     ],

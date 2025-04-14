@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Moq;
 using Xunit;
-using ZeiHomeKitchen_backend.Services;
-using ZeiHomeKitchen_backend.Repositories;
-using ZeiHomeKitchen_backend.Models;
-using ZeiHomeKitchen_backend.Mappers;
+using ZeiHomeKitchen_backend.Domain.Models;
+using ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration;
+using ZeiHomeKitchen_backend.Domain.Services;
+using ZeiHomeKitchen_backend.Application.Ports;
 
 namespace ZeiHomeKitchen_backend.Tests.Services;
 

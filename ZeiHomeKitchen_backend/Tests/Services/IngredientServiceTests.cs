@@ -1,12 +1,12 @@
 using System;
 using Xunit;
 using Moq;
-using ZeiHomeKitchen_backend.Repositories;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using ZeiHomeKitchen_backend.Services;
-using ZeiHomeKitchen_backend.Models;
-using ZeiHomeKitchen_backend.Dtos;
+using ZeiHomeKitchen_backend.Domain.Models;
+using ZeiHomeKitchen_backend.Domain.Services;
+using ZeiHomeKitchen_backend.Domain.Dtos;
+using ZeiHomeKitchen_backend.Application.Ports;
 
 namespace ZeiHomeKitchen_backend.Tests;
 

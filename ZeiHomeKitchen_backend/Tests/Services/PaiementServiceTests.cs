@@ -1,15 +1,16 @@
 ﻿using Moq;
 using Xunit;
 using Microsoft.Extensions.Logging;
-using ZeiHomeKitchen_backend.Dtos;
-using ZeiHomeKitchen_backend.Models;
-using ZeiHomeKitchen_backend.Repositories;
-using ZeiHomeKitchen_backend.Services;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ZeiHomeKitchen_backend.MappingConfiguration;
+using ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration;
+using ZeiHomeKitchen_backend.Domain.Models;
+using ZeiHomeKitchen_backend.Domain.Services;
+using ZeiHomeKitchen_backend.Domain.Dtos;
+using ZeiHomeKitchen_backend.Application.Ports;
+using ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration;
 
 namespace ZeiHomeKitchen_backend.Tests.Services
 {
