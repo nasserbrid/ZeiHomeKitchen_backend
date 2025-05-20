@@ -18,6 +18,7 @@ using ZeiHomeKitchen_backend.Application.Ports;
 using ZeiHomeKitchen_backend.Infrastructure.Repositories;
 using ZeiHomeKitchen_backend.Infrastructure.Data;
 using DotNetEnv;
+using Stripe;
 
 
 
@@ -35,6 +36,9 @@ if (builder.Environment.IsDevelopment())
 // //Utilisation de mes variables d'environnements en production
 builder.Configuration["ConnectionStrings:SqlDbConnection"] = Environment.GetEnvironmentVariable("DATABASE_URL");
 builder.Configuration["Jwt:SecretKey"] = Environment.GetEnvironmentVariable("SECRET_KEY");
+builder.Configuration["Stripe:SecretKey"] = Environment.GetEnvironmentVariable("SECRET_KEY_STRIPE");
+builder.Configuration["Stripe:PublishableKey"] = Environment.GetEnvironmentVariable("PUBLISHABLE_KEY_STRIPE");
+
 //J'ajoute ici la configuration de la connexion avec la base de données.
 var connectionString = builder.Configuration.GetConnectionString("SqlDbConnection");
 
@@ -49,6 +53,10 @@ builder.Services.AddIdentity<Utilisateur, IdentityRole<int>>()
 
 var jwtKey = builder.Configuration["Jwt:SecretKey"];
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -122,11 +130,16 @@ builder.Services.AddHttpContextAccessor();
 
 //builder.Services.AddScoped<IStatistiqueService, StatistiqueService>();
 
-builder.Services.AddScoped<TokenService>(provider =>
+//builder.Services.AddScoped<TokenService>(provider =>
+//{
+//    //Déjà configuré dans votre appsettings.json
+//    var secretKey = builder.Configuration["Jwt:SecretKey"]; 
+//    return new TokenService(secretKey);
+//});
+builder.Services.AddScoped<ZeiHomeKitchen_backend.Domain.Services.TokenService>(provider =>
 {
-    //Déjà configuré dans votre appsettings.json
-    var secretKey = builder.Configuration["Jwt:SecretKey"]; 
-    return new TokenService(secretKey);
+    var secretKey = builder.Configuration["Jwt:SecretKey"];
+    return new ZeiHomeKitchen_backend.Domain.Services.TokenService(secretKey);
 });
 
 
