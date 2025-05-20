@@ -12,10 +12,10 @@ namespace ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration
                 reservation.DateReservation,
                 reservation.Adresse,
                 Enum.Parse<ReservationStatusDto>(reservation.Statut),
-                reservation.Nom,                // Ajout du Nom
-                reservation.Prenom,             // Ajout du Prénom
-                reservation.NombrePersonnes     // Nombre de personnes
-                                                // Garder IdStatistique pour le suivi
+                reservation.Nom,                
+                reservation.Prenom,             
+                reservation.NombrePersonnes     
+                                                
             )
             {
                 PlatIds = reservation.Plats?.Select(p => p.IdPlat).ToList() ?? new List<int>(),

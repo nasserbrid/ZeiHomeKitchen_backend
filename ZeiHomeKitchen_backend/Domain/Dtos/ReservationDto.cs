@@ -15,20 +15,10 @@ namespace ZeiHomeKitchen_backend.Domain.Dtos
         DateTime? DateReservation,
         string Adresse,
         ReservationStatusDto Statut,
-        string Nom,       // Nom de l'utilisateur
-        string Prenom,    // Prénom de l'utilisateur
-        int NombrePersonnes) // Nombre de personnes pour la réservation
-
-
-    //public record ReservationDto(
-    //    int IdReservation,
-    //    DateTime? DateReservation,
-    //    string Adresse,
-    //    ReservationStatusDto Statut,
-    //    int IdUtilisateur,
-    //    int IdStatistique,
-    //    int NombrePersonnes,
-    //    int? IdPaiement = null)
+        string Nom,       
+        string Prenom,    
+        int NombrePersonnes) 
+   
     {
         // Propriété mutable pour permettre à AfterMap de la modifier
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

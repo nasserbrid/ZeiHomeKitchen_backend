@@ -136,5 +136,29 @@ namespace ZeiHomeKitchen_backend.Infrastructure.Controllers
                 return StatusCode(500, "Une erreur est survenue lors de la suppression du paiement");
             }
         }
+
+        /// <summary>
+        /// Récupère un paiement par l'ID de réservation.
+        /// </summary>
+        /// <param name="reservationId">L'ID de la réservation liée au paiement.</param>
+        /// <returns>Le DTO du paiement lié à la réservation.</returns>
+        [HttpGet("by-reservation/{reservationId}")]
+        public async Task<ActionResult<PaiementDto>> GetPaiementByReservationId(int reservationId)
+        {
+            try
+            {
+                var paiement = await _paiementService.GetPaiementByReservationId(reservationId);
+                if (paiement == null)
+                {
+                    return NotFound();
+                }
+                return Ok(paiement);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erreur lors de la récupération du paiement {reservationId}");
+                return StatusCode(500, "Une erreur est survenue lors de la récupération du paiement");
+            }
+        }
     }
 }

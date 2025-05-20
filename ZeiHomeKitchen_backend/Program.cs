@@ -17,14 +17,24 @@ using ZeiHomeKitchen_backend.Domain.Services;
 using ZeiHomeKitchen_backend.Application.Ports;
 using ZeiHomeKitchen_backend.Infrastructure.Repositories;
 using ZeiHomeKitchen_backend.Infrastructure.Data;
+using DotNetEnv;
 
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+//Utilisation de mes variables d'environnements en local
+if (builder.Environment.IsDevelopment())
+{
 
-// Add services to the container.
+    Env
+   .TraversePath()        // Cherche le fichier .env dans les dossiers parents
+   .Load();               // Charge le fichier .env
+}
 
+// //Utilisation de mes variables d'environnements en production
+builder.Configuration["ConnectionStrings:SqlDbConnection"] = Environment.GetEnvironmentVariable("DATABASE_URL");
+builder.Configuration["Jwt:SecretKey"] = Environment.GetEnvironmentVariable("SECRET_KEY");
 //J'ajoute ici la configuration de la connexion avec la base de données.
 var connectionString = builder.Configuration.GetConnectionString("SqlDbConnection");
 
@@ -157,6 +167,7 @@ builder.Services.AddControllers()
         options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
         // Ajoutez cette ligne pour être sûr
         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
     });
 //Me permets d'avoir une taille plus conséquente pour les images en base64.
 builder.Services.Configure<KestrelServerOptions>(options =>
@@ -171,7 +182,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "ZeiHomeKitchen_backend", Version = "v1" });
 
-    // Ajoute la configuration pour le JWT Bearer
+    // Ajout de la configuration pour le JWT Bearer
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",

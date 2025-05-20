@@ -296,6 +296,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PaiementController",
+    "Method": "GetPaiementByReservationId",
+    "RelativePath": "api/Paiement/by-reservation/{reservationId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reservationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ZeiHomeKitchen_backend.Domain.Dtos.PaiementDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "ZeiHomeKitchen_backend.Infrastructure.Controllers.PlatController",
     "Method": "GetAllPlats",
     "RelativePath": "api/Plat",
