@@ -23,7 +23,12 @@ namespace ZeiHomeKitchen_backend.Domain.Dtos
         decimal Montant,
         PaiementStatusDto Statut,
         PaiementMoyenDto Moyen,
-        int IdReservation
+        int IdReservation,
+        string? StripePaymentIntentId = null,
+        string? StripeClientSecret = null,
+        DateTime? DateCreation = null,
+        DateTime? DateMiseAJour = null,
+        string? StripeStatus = null
     );
 }
 

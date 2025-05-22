@@ -13,7 +13,12 @@ namespace ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration
                 paiement.Montant ?? 0,
                 Enum.Parse<PaiementStatusDto>(paiement.Statut),
                 Enum.Parse<PaiementMoyenDto>(paiement.Moyen),
-                paiement.IdReservation
+                paiement.IdReservation,
+                paiement.StripePaymentIntentId,
+                paiement.StripeClientSecret,
+                paiement.DateCreation,
+                paiement.DateMiseAJour,
+                paiement.StripeStatus
             );
         }
 
@@ -26,7 +31,12 @@ namespace ZeiHomeKitchen_backend.Infrastructure.MappingConfiguration
                 Montant = dto.Montant,
                 Statut = dto.Statut.ToString(),
                 Moyen = dto.Moyen.ToString(),
-                IdReservation = dto.IdReservation
+                IdReservation = dto.IdReservation,
+                StripePaymentIntentId = dto.StripePaymentIntentId,
+                StripeClientSecret = dto.StripeClientSecret,
+                DateCreation = dto.DateCreation,
+                DateMiseAJour = dto.DateMiseAJour,
+                StripeStatus = dto.StripeStatus
             };
         }
     }

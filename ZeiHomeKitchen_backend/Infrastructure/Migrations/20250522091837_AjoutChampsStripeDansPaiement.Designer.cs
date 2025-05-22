@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZeiHomeKitchen_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ZeiHomeKitchen_backend.Infrastructure.Data;
 namespace ZeiHomeKitchen_backend.Migrations
 {
     [DbContext(typeof(ZeiHomeKitchenContext))]
-    partial class ZeiHomeKitchenContextModelSnapshot : ModelSnapshot
+    [Migration("20250522091837_AjoutChampsStripeDansPaiement")]
+    partial class AjoutChampsStripeDansPaiement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
