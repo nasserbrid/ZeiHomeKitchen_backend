@@ -117,6 +117,8 @@ builder.Services.AddScoped<ICreateReservationService, CreateReservationService>(
 //J'ajoute RegisterService dans program.cs
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 
+builder.Services.AddScoped<IStripeService, StripeService>();
+
 //J'ajoute ReservationService dans program.cs
 builder.Services.AddScoped<IReservationService, ReservationService>();
 
